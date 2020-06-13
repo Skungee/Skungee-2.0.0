@@ -1,0 +1,17 @@
+# The version is to help determine which version this config is. Please don't modify this value.
+configuration-version: 1
+
+# Print additional information in the console. Useful for figuring out errors and issues.
+debug: false
+
+# This value should match the same port defined in the SimpleSkungee configuration on the Proxy.
+port: 8000
+
+# Settings relating to the protocol.
+protocol:
+    # The packet buffer size in bytes.
+    # Default size is the UDP standard 1024
+    #
+    # If the protocol is sending larger amounts of data (You have a large amount of players, and/or servers)
+    # or you're recieving an EOFException. You may want to or be instructed to increase this value.
+    buffer-size: 1024

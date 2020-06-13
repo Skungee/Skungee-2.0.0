@@ -1,0 +1,4 @@
+version: @version@
+
+#@an makes the pattern allow for `an`.
+

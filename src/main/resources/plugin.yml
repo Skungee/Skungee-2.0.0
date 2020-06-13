@@ -1,0 +1,6 @@
+name: Skungee
+authors: [Skungee]
+version: @version@
+api-version: 1.13
+depend: [Skript]
+main: com.skungee.spigot.SpigotSkungee

@@ -1,0 +1,4 @@
+name: Skungee
+author: Skungee
+version: @version@
+main: com.skungee.bungeecord.BungeeSkungee
