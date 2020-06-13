@@ -24,7 +24,7 @@ import ch.njol.util.Kleenean;
 public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 
 	static {
-		Skript.registerExpression(ExprProxyPlayers.class, SkungeePlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] prox(ied|y) players [o(f|n) server[s] %-servers/strings%]");
+		Skript.registerExpression(ExprProxyPlayers.class, SkungeePlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] prox(ied|y) players [o(f|n) server[s] %-skungeeservers/strings%]");
 	}
 
 	@Nullable

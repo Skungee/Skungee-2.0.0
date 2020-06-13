@@ -30,17 +30,27 @@ public class PlayerHandler extends Handler {
 		JsonObject returning = new JsonObject();
 		JsonArray array = new JsonArray();
 		Platform platform = Skungee.getPlatform();
-		if (!object.has("servers") || object.get("servers").getAsJsonArray().size() == 0) {
+		if (object.has("servers")) {
+			if (object.get("servers").getAsJsonArray().size() == 0)
+				return returning;
+			List<String> serverNames = Streams.stream(object.get("servers").getAsJsonArray())
+					.map(element -> element.getAsString())
+					.collect(Collectors.toList());
 			platform.getPlayers().stream()
+					.filter(player -> serverNames.contains(platform.getCurrentServer(player).getName()))
 					.forEach(player -> array.add(serializer.serialize(player, SkungeePlayer.class, null)));
-		} else if (!object.has("names") || object.get("names").getAsJsonArray().size() == 0) {
+		} else if (object.has("names")) {
+			if (object.get("names").getAsJsonArray().size() == 0)
+				return returning;
 			List<String> names = Streams.stream(object.get("names").getAsJsonArray())
 					.map(element -> element.getAsString())
 					.collect(Collectors.toList());
 			platform.getPlayers().stream()
 					.filter(player -> names.contains(player.getName()))
 					.forEach(player -> array.add(serializer.serialize(player, SkungeePlayer.class, null)));
-		} else if (!object.has("uuids") || object.get("uuids").getAsJsonArray().size() == 0) {
+		} else if (object.has("uuids")) {
+			if (object.get("uuids").getAsJsonArray().size() == 0)
+				return returning;
 			List<UUID> names = Streams.stream(object.get("uuids").getAsJsonArray())
 					.map(element -> {
 						try {

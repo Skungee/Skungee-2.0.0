@@ -83,7 +83,7 @@ public class ServerManager {
 						return null;
 					List<SkungeeServer> servers = new ArrayList<>();
 					JsonArray array = object.get("servers").getAsJsonArray();
-					array.forEach(element -> serializer.deserialize(element, SkungeeServer.class, null));
+					array.forEach(element -> servers.add(serializer.deserialize(element, SkungeeServer.class, null)));
 					return servers;
 				}
 			});
