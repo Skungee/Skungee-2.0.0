@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.annotation.Nullable;
 import org.reflections.Reflections;
 
 import com.google.common.collect.Lists;
@@ -136,7 +135,7 @@ public class BungeeSkungee extends Plugin implements Platform {
 		ProxiedPlayer player = getProxy().getPlayer(name);
 		if (player == null)
 			return Optional.empty();
-		return Optional.of(new SkungeePlayer(player.getName(), player.getUniqueId()));
+		return Optional.of(new SkungeePlayer(player.getName(), player.getUniqueId(), getCurrentServer(player.getUniqueId())));
 	}
 
 	@Override
@@ -144,7 +143,7 @@ public class BungeeSkungee extends Plugin implements Platform {
 		ProxiedPlayer player = getProxy().getPlayer(uuid);
 		if (player == null)
 			return Optional.empty();
-		return Optional.of(new SkungeePlayer(player.getName(), player.getUniqueId()));
+		return Optional.of(new SkungeePlayer(player.getName(), player.getUniqueId(), getCurrentServer(player.getUniqueId())));
 	}
 
 	@Override
@@ -156,10 +155,8 @@ public class BungeeSkungee extends Plugin implements Platform {
 				.collect(Collectors.toSet());
 	}
 
-	@Override
-	@Nullable
-	public SkungeeServer getCurrentServer(SkungeePlayer player) {
-		return new SkungeeServer(getProxy().getPlayer(player.getUniqueId()).getServer().getInfo().getName());
+	private String getCurrentServer(UUID uuid) {
+		return getProxy().getPlayer(uuid).getServer().getInfo().getName();
 	}
 
 }

@@ -20,12 +20,15 @@ public class SkungeePlayerSerializer implements Serializer<SkungeePlayer> {
 			throw new JsonParseException("A SkungeeServer json element did not contain the property 'name'");
 		if (!object.has("uuid"))
 			throw new JsonParseException("A SkungeeServer json element did not contain the property 'uuid'");
-		return new SkungeePlayer(object.get("name").getAsString(), UUID.fromString(object.get("uuid").getAsString()));
+		if (!object.has("server"))
+			throw new JsonParseException("A SkungeeServer json element did not contain the property 'server'");
+		return new SkungeePlayer(object.get("name").getAsString(), UUID.fromString(object.get("uuid").getAsString()), object.get("server").getAsString());
 	}
 
 	@Override
 	public JsonElement serialize(SkungeePlayer player, Type type, JsonSerializationContext context) {
 		JsonObject object = new JsonObject();
+		object.addProperty("server", player.getCurrentServer());
 		object.addProperty("uuid", player.getUniqueId() + "");
 		object.addProperty("name", player.getName());
 		return object;

@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.annotation.Nullable;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 
@@ -151,7 +150,7 @@ public class VelocitySkungee implements Platform {
 		Optional<Player> player = proxy.getPlayer(name);
 		if (!player.isPresent())
 			return Optional.empty();
-		return Optional.of(new SkungeePlayer(player.get().getUsername(), player.get().getUniqueId()));
+		return Optional.of(new SkungeePlayer(player.get().getUsername(), player.get().getUniqueId(), getCurrentServer(player.get().getUniqueId())));
 	}
 
 	@Override
@@ -159,7 +158,7 @@ public class VelocitySkungee implements Platform {
 		Optional<Player> player = proxy.getPlayer(uuid);
 		if (!player.isPresent())
 			return Optional.empty();
-		return Optional.of(new SkungeePlayer(player.get().getUsername(), player.get().getUniqueId()));
+		return Optional.of(new SkungeePlayer(player.get().getUsername(), player.get().getUniqueId(), getCurrentServer(player.get().getUniqueId())));
 	}
 
 	@Override
@@ -171,16 +170,14 @@ public class VelocitySkungee implements Platform {
 				.collect(Collectors.toSet());
 	}
 
-	@Override
-	@Nullable
-	public SkungeeServer getCurrentServer(SkungeePlayer player) {
-		Optional<Player> optional = proxy.getPlayer(player.getUniqueId());
+	private String getCurrentServer(UUID uuid) {
+		Optional<Player> optional = proxy.getPlayer(uuid);
 		if (!optional.isPresent()) // Low chance of happening, unless disconnected?
 			return null;
 		Optional<ServerConnection> server = optional.get().getCurrentServer();
 		if (!server.isPresent())
 			return null;
-		return new SkungeeServer(server.get().getServerInfo().getName());
+		return server.get().getServerInfo().getName();
 	}
 
 }

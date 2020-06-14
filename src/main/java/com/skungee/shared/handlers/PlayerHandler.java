@@ -37,7 +37,7 @@ public class PlayerHandler extends Handler {
 					.map(element -> element.getAsString())
 					.collect(Collectors.toList());
 			platform.getPlayers().stream()
-					.filter(player -> serverNames.contains(platform.getCurrentServer(player).getName()))
+					.filter(player -> serverNames.contains(player.getCurrentServer()))
 					.forEach(player -> array.add(serializer.serialize(player, SkungeePlayer.class, null)));
 		} else if (object.has("names")) {
 			if (object.get("names").getAsJsonArray().size() == 0)
@@ -71,7 +71,7 @@ public class PlayerHandler extends Handler {
 					.map(Optional::get)
 					.collect(Collectors.toList());
 			platform.getPlayers().stream()
-					.filter(player -> servers.stream().anyMatch(server -> platform.getCurrentServer(player).equals(server)))
+					.filter(player -> servers.stream().anyMatch(server -> player.getCurrentServer().equals(server.getName())))
 					.forEach(player -> array.add(serializer.serialize(player, SkungeePlayer.class, null)));
 		}
 		returning.add("players", array);
