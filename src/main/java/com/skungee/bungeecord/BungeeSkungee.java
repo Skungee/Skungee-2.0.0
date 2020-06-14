@@ -68,7 +68,7 @@ public class BungeeSkungee extends Plugin implements Platform {
 //				japson = new JapsonServer(configuration.getString("bind-address", "0.0.0.0"), configuration.getInt("port", 8000));
 //			else
 			japson = new JapsonServer(configuration.getInt("port", 8000));
-			japson.registerHandlers(new Reflections("com.skungee.shared.handlers")
+			japson.registerHandlers(new Reflections("com.skungee.shared.handlers", "com.skungee.bungeecord.handlers")
 					.getSubTypesOf(Handler.class).stream().map(clazz -> {
 						try {
 							return clazz.newInstance();

@@ -1,11 +1,13 @@
 package com.skungee.spigot.elements;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
+import com.skungee.spigot.SpigotSkungee;
 import com.skungee.spigot.managers.ServerManager;
 
 import ch.njol.skript.classes.ClassInfo;
@@ -26,10 +28,17 @@ public class Types {
 					@Override
 					@Nullable
 					public SkungeeServer parse(String input, ParseContext context) {
+						if (!Pattern.compile("^[A-Za-z0-9\\s]+$").matcher(input).matches())
+							return null;
 						Optional<SkungeeServer> server = ServerManager.getServer(input);
 						if (server.isPresent())
 							return server.get();
 						return null;
+					}
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return SpigotSkungee.getInstance().getConfig().getBoolean("skungee-server-parsing", false);
 					}
 
 					@Override

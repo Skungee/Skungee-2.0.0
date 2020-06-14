@@ -1,7 +1,6 @@
 package com.skungee.spigot.elements.expressions;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -10,8 +9,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
+import com.skungee.shared.objects.SkungeeServerMapper;
 import com.skungee.spigot.SpigotSkungee;
-import com.skungee.spigot.managers.ServerManager;
 import com.skungee.spigot.packets.PlayersPacket;
 
 import ch.njol.skript.Skript;
@@ -43,14 +42,7 @@ public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 		PlayersPacket packet = new PlayersPacket();
 		if (servers != null) {
 			packet.setServers(Arrays.stream(servers.getArray(event))
-					.map(object -> {
-						if (object instanceof SkungeeServer)
-							return (SkungeeServer) object;
-						Optional<SkungeeServer> server = ServerManager.getServer((String) object);
-						if (!server.isPresent())
-							return null;
-						return server.get();
-					})
+					.map(new SkungeeServerMapper())
 					.filter(server -> server != null)
 					.toArray(SkungeeServer[]::new));
 		}

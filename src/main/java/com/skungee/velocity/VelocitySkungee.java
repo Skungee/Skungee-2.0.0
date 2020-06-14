@@ -83,7 +83,7 @@ public class VelocitySkungee implements Platform {
 	public void onProxyInitialization(ProxyInitializeEvent event) {
 		try {
 			japson = new JapsonServer(configuration.getString("bind-address", "0.0.0.0"), configuration.getLong("port", 8000L).intValue());
-			japson.registerHandlers(new Reflections("com.skungee.shared.handlers").getSubTypesOf(Handler.class).stream()
+			japson.registerHandlers(new Reflections("com.skungee.shared.handlers", "com.skungee.velocity.handlers").getSubTypesOf(Handler.class).stream()
 					.map(clazz -> {
 						try {
 							return clazz.getConstructor(ProxyServer.class).newInstance(proxy);
