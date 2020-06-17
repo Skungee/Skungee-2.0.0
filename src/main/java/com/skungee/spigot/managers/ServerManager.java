@@ -1,11 +1,13 @@
 package com.skungee.spigot.managers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -61,6 +63,14 @@ public class ServerManager {
 		} catch (ExecutionException e) {
 			return Optional.empty();
 		}
+	}
+
+	public static List<SkungeeServer> getServers(String... names) {
+		return Arrays.stream(names)
+				.map(name -> getServer(name))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toList());
 	}
 
 	/**

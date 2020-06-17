@@ -17,6 +17,7 @@ import ch.njol.skript.SkriptAddon;
 public class SpigotSkungee extends JavaPlugin {
 
 	private static SpigotSkungee instance;
+	private static SkungeeAPI API;
 	private JapsonClient japson;
 	private SkriptAddon addon;
 	private Metrics metrics;
@@ -24,6 +25,7 @@ public class SpigotSkungee extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
+		API = new SkungeeAPI(this);
 		File configFile = new File(getDataFolder(), "config.yml");
 		//If newer version was found, update configuration.
 		int version = 1;
@@ -42,12 +44,14 @@ public class SpigotSkungee extends JavaPlugin {
 			e.printStackTrace();
 		}
 		metrics = new Metrics(this);
-		try {
-			addon = Skript.registerAddon(this)
-					.loadClasses("com.skungee.spigot", "elements")
-					.setLanguageFileDirectory("lang");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (Bukkit.getPluginManager().isPluginEnabled("Skript")) {
+			try {
+				addon = Skript.registerAddon(this)
+						.loadClasses("com.skungee.spigot", "elements")
+						.setLanguageFileDirectory("lang");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		consoleMessage("has been enabled!");
 	}
@@ -62,6 +66,10 @@ public class SpigotSkungee extends JavaPlugin {
 
 	public SkriptAddon getAddonInstance() {
 		return addon;
+	}
+
+	public static SkungeeAPI getAPI() {
+		return API;
 	}
 
 	public Metrics getMetrics() {
