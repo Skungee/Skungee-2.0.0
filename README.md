@@ -56,7 +56,7 @@ try {
 			assertEquals(message, "Hello world!");
 
 			JsonObject returning = new JsonObject();
-			returning.addProperty("reponse", "This is a response!");
+			returning.addProperty("response", "This is a response!");
 			return returning;
 		}
 		
