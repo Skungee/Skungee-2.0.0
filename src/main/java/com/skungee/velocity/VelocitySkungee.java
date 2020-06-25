@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
+import com.skungee.shared.Packets;
 import com.skungee.shared.Platform;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
@@ -129,19 +130,25 @@ public class VelocitySkungee implements Platform {
 
 	@Override
 	public Optional<SkungeeServer> getServer(String name) {
-		Optional<ServerInfo> info = proxy.getAllServers().stream()
+		Optional<ServerInfo> optional = proxy.getAllServers().stream()
 				.filter(server -> server.getServerInfo().getName().equals(name))
 				.map(server -> server.getServerInfo())
 				.findFirst();
-		if (!info.isPresent())
+		if (!optional.isPresent())
 			return Optional.empty();
-		return Optional.of(new SkungeeServer(info.get().getName()));
+		ServerInfo info = optional.get();
+		boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
+		return Optional.of(new SkungeeServer(info.getName(), online));
 	}
 
 	@Override
 	public Set<SkungeeServer> getServers() {
 		return proxy.getAllServers().stream()
-				.map(server -> new SkungeeServer(server.getServerInfo().getName()))
+				.map(server -> {
+					ServerInfo info = server.getServerInfo();
+					boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
+					return new SkungeeServer(info.getName(), online);
+				})
 				.collect(Collectors.toSet());
 	}
 
@@ -178,6 +185,13 @@ public class VelocitySkungee implements Platform {
 		if (!server.isPresent())
 			return null;
 		return server.get().getServerInfo().getName();
+	}
+
+	@Override
+	public void setApiHandler(Handler handler) throws IllegalAccessException {
+		if (handler.getID() != Packets.API.getPacketId())
+			throw new IllegalAccessException("The API handler must represent the Packets.API packet ID");
+		japson.registerHandlers(handler);
 	}
 
 }

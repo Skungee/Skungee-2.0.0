@@ -2,10 +2,16 @@ package com.skungee.shared.objects;
 
 public class SkungeeServer {
 
+	private final boolean online;
 	private final String name;
 
-	public SkungeeServer(String name) {
+	public SkungeeServer(String name, boolean online) {
+		this.online = online;
 		this.name = name;
+	}
+
+	public boolean isOnline() {
+		return online;
 	}
 
 	public String getName() {

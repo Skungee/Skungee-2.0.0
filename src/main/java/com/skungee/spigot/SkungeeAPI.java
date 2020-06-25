@@ -4,8 +4,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 import com.sitrica.japson.client.JapsonClient;
+import com.sitrica.japson.gson.JsonObject;
+import com.sitrica.japson.shared.Packet;
+import com.sitrica.japson.shared.ReturnablePacket;
+import com.skungee.shared.Packets;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.managers.ServerManager;
@@ -95,6 +100,41 @@ public class SkungeeAPI {
 	public List<SkungeePlayer> getPlayers(SkungeeServer... servers) throws TimeoutException, InterruptedException, ExecutionException {
 		PlayersPacket packet = new PlayersPacket();
 		packet.setServers(servers);
+		return japson.sendPacket(packet);
+	}
+
+	/**
+	 * Send a custom non-returning packet.
+	 * 
+	 * @param packet The Japson Packet to send.
+	 */
+	public void sendJson(JsonObject json) {
+		Packet packet = new Packet(Packets.API.getPacketId()) {
+			@Override
+			public JsonObject toJson() {
+				return json;
+			}
+		};
+		japson.sendPacket(packet);
+	}
+
+	/**
+	 * Send a custom returning packet.
+	 * 
+	 * @param packet The Japson ReturningPacket to send.
+	 * @return The data returned from the handler on the proxy.
+	 */
+	public <T> T sendPacket(JsonObject json, Function<JsonObject, T> function) throws TimeoutException, InterruptedException, ExecutionException {
+		ReturnablePacket<T> packet = new ReturnablePacket<T>(Packets.API.getPacketId()) {
+			@Override
+			public JsonObject toJson() {
+				return json;
+			}
+			@Override
+			public T getObject(JsonObject object) {
+				return function.apply(object);
+			}
+		};
 		return japson.sendPacket(packet);
 	}
 

@@ -17,12 +17,15 @@ public class SkungeeServerSerializer implements Serializer<SkungeeServer> {
 		JsonObject object = element.getAsJsonObject();
 		if (!object.has("name"))
 			throw new JsonParseException("A SkungeeServer json element did not contain the property 'name'");
-		return new SkungeeServer(object.get("name").getAsString());
+		if (!object.has("online"))
+			throw new JsonParseException("A SkungeeServer json element did not contain the property 'online'");
+		return new SkungeeServer(object.get("name").getAsString(), object.get("online").getAsBoolean());
 	}
 
 	@Override
 	public JsonElement serialize(SkungeeServer server, Type type, JsonSerializationContext context) {
 		JsonObject object = new JsonObject();
+		object.addProperty("online", server.isOnline());
 		object.addProperty("name", server.getName());
 		return object;
 	}
