@@ -1,4 +1,4 @@
-package com.skungee.shared.handlers;
+package com.skungee.proxy.handlers;
 
 import java.net.InetAddress;
 import java.util.Optional;

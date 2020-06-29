@@ -1,8 +1,9 @@
-package com.skungee.shared.objects;
+package com.skungee.spigot.objects;
 
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.managers.ServerManager;
 
 public class SkungeeServerMapper implements Function<Object, SkungeeServer> {

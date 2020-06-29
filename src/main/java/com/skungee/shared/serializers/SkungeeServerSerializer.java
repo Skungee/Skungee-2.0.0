@@ -8,9 +8,12 @@ import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.gson.JsonParseException;
 import com.sitrica.japson.gson.JsonSerializationContext;
 import com.sitrica.japson.shared.Serializer;
+import com.skungee.proxy.ServerDataManager.ServerData;
 import com.skungee.shared.objects.SkungeeServer;
 
 public class SkungeeServerSerializer implements Serializer<SkungeeServer> {
+
+	private final SkungeeServerDataSerializer dataSerializer = new SkungeeServerDataSerializer();
 
 	@Override
 	public SkungeeServer deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -19,7 +22,10 @@ public class SkungeeServerSerializer implements Serializer<SkungeeServer> {
 			throw new JsonParseException("A SkungeeServer json element did not contain the property 'name'");
 		if (!object.has("online"))
 			throw new JsonParseException("A SkungeeServer json element did not contain the property 'online'");
-		return new SkungeeServer(object.get("name").getAsString(), object.get("online").getAsBoolean());
+		if (!object.has("data"))
+			throw new JsonParseException("A SkungeeServer json element did not contain the property 'data'");
+		ServerData data = context.deserialize(object.get("data"), ServerData.class);
+		return new SkungeeServer(object.get("name").getAsString(), object.get("online").getAsBoolean(), data);
 	}
 
 	@Override
@@ -27,6 +33,7 @@ public class SkungeeServerSerializer implements Serializer<SkungeeServer> {
 		JsonObject object = new JsonObject();
 		object.addProperty("online", server.isOnline());
 		object.addProperty("name", server.getName());
+		object.add("data", dataSerializer.serialize(server.getServerData(), ServerData.class, context));
 		return object;
 	}
 

@@ -1,4 +1,4 @@
-package com.skungee.shared.objects;
+package com.skungee.spigot.objects;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import org.bukkit.OfflinePlayer;
 
+import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.spigot.SpigotSkungee;
 import com.skungee.spigot.packets.PlayersPacket;
 

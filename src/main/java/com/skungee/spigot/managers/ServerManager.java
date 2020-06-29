@@ -66,7 +66,7 @@ public class ServerManager {
 	}
 
 	public static List<SkungeeServer> getServers(String... names) {
-		return Arrays.stream(names)
+		return Arrays.stream(names).parallel()
 				.map(name -> getServer(name))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -76,7 +76,7 @@ public class ServerManager {
 	/**
 	 * This method will do a hard lookup and refresh the cache.
 	 * 
-	 * @return
+	 * @return List<SkungeeServer> of exact servers.
 	 */
 	public static List<SkungeeServer> getServers() {
 		try {

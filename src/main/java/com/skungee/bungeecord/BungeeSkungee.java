@@ -18,6 +18,7 @@ import org.reflections.Reflections;
 import com.google.common.collect.Lists;
 import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
+import com.skungee.proxy.ServerDataManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Platform;
 import com.skungee.shared.Skungee;
@@ -68,7 +69,7 @@ public class BungeeSkungee extends Plugin implements Platform {
 //				japson = new JapsonServer(configuration.getString("bind-address", "0.0.0.0"), configuration.getInt("port", 8000));
 //			else
 			japson = new JapsonServer(configuration.getInt("port", 8000));
-			japson.registerHandlers(new Reflections("com.skungee.shared.handlers", "com.skungee.bungeecord.handlers")
+			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.bungeecord.handlers")
 					.getSubTypesOf(Handler.class).stream().map(clazz -> {
 						try {
 							return clazz.newInstance();
@@ -113,6 +114,7 @@ public class BungeeSkungee extends Plugin implements Platform {
 					.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "[Skungee] " + string)));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Optional<SkungeeServer> getServer(String name) {
 		Optional<ServerInfo> optional = ProxyServer.getInstance().getServers().entrySet().stream()
@@ -122,18 +124,17 @@ public class BungeeSkungee extends Plugin implements Platform {
 		if (!optional.isPresent())
 			return Optional.empty();
 		ServerInfo info = optional.get();
-		@SuppressWarnings("deprecation")
 		boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
-		return Optional.of(new SkungeeServer(info.getName(), online));
+		return Optional.of(new SkungeeServer(info.getName(), online, ServerDataManager.get(info.getAddress())));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Set<SkungeeServer> getServers() {
 		return ProxyServer.getInstance().getServers().values().stream()
 				.map(info -> {
-					@SuppressWarnings("deprecation")
 					boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
-					return new SkungeeServer(info.getName(), online);
+					return new SkungeeServer(info.getName(), online, ServerDataManager.get(info.getAddress()));
 				})
 				.collect(Collectors.toSet());
 	}

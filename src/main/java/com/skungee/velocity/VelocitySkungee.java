@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
+import com.skungee.proxy.ServerDataManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Platform;
 import com.skungee.shared.Skungee;
@@ -83,7 +84,7 @@ public class VelocitySkungee implements Platform {
 	public void onProxyInitialization(ProxyInitializeEvent event) {
 		try {
 			japson = new JapsonServer(configuration.getString("bind-address", "0.0.0.0"), configuration.getLong("port", 8000L).intValue());
-			japson.registerHandlers(new Reflections("com.skungee.shared.handlers", "com.skungee.velocity.handlers").getSubTypesOf(Handler.class).stream()
+			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.velocity.handlers").getSubTypesOf(Handler.class).stream()
 					.map(clazz -> {
 						try {
 							return clazz.getConstructor(ProxyServer.class).newInstance(proxy);
@@ -138,7 +139,7 @@ public class VelocitySkungee implements Platform {
 			return Optional.empty();
 		ServerInfo info = optional.get();
 		boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
-		return Optional.of(new SkungeeServer(info.getName(), online));
+		return Optional.of(new SkungeeServer(info.getName(), online, ServerDataManager.get(info.getAddress())));
 	}
 
 	@Override
@@ -147,7 +148,7 @@ public class VelocitySkungee implements Platform {
 				.map(server -> {
 					ServerInfo info = server.getServerInfo();
 					boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
-					return new SkungeeServer(info.getName(), online);
+					return new SkungeeServer(info.getName(), online, ServerDataManager.get(info.getAddress()));
 				})
 				.collect(Collectors.toSet());
 	}

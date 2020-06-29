@@ -9,8 +9,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
-import com.skungee.shared.objects.SkungeeServerMapper;
 import com.skungee.spigot.SpigotSkungee;
+import com.skungee.spigot.objects.SkungeeServerMapper;
 import com.skungee.spigot.packets.PlayersPacket;
 
 import ch.njol.skript.Skript;

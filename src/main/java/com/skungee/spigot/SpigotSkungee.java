@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sitrica.japson.client.JapsonClient;
+import com.skungee.spigot.tasks.ServerDataTask;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
@@ -44,6 +45,7 @@ public class SpigotSkungee extends JavaPlugin {
 			e.printStackTrace();
 		}
 		metrics = new Metrics(this);
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new ServerDataTask(japson), 0, 5 * (60 * 20)); // 5 minutes.
 		if (Bukkit.getPluginManager().isPluginEnabled("Skript")) {
 			try {
 				addon = Skript.registerAddon(this)

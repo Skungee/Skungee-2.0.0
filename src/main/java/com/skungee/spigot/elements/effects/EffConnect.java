@@ -9,10 +9,10 @@ import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Packet;
 import com.skungee.shared.Packets;
-import com.skungee.shared.objects.SkungeePlayerMapper;
 import com.skungee.shared.objects.SkungeeServer;
-import com.skungee.shared.objects.SkungeeServerMapper;
 import com.skungee.spigot.SpigotSkungee;
+import com.skungee.spigot.objects.SkungeePlayerMapper;
+import com.skungee.spigot.objects.SkungeeServerMapper;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Effect;
