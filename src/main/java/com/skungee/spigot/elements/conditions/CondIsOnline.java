@@ -7,7 +7,7 @@ import ch.njol.skript.conditions.base.PropertyCondition;
 public class CondIsOnline extends PropertyCondition<SkungeeServer> {
 
 	static {
-		register(CondIsOnline.class, PropertyType.BE, "online", "[server[s]] %skungeeservers%");
+		register(CondIsOnline.class, PropertyType.BE, "online", "skungeeservers");
 	}
 
 	@Override

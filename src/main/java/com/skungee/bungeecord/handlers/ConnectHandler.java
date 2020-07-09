@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.sitrica.japson.gson.JsonObject;
-import com.sitrica.japson.shared.Executor;
+import com.sitrica.japson.shared.Handler;
 import com.skungee.shared.Packets;
 
 import net.md_5.bungee.api.ProxyServer;
@@ -13,16 +13,16 @@ import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.ServerConnectEvent.Reason;
 
-public class ConnectHandler extends Executor {
+public class ConnectHandler extends Handler {
 
 	public ConnectHandler() {
 		super(Packets.CONNECT.getPacketId());
 	}
 
 	@Override
-	public void execute(InetAddress address, int port, JsonObject object) {
+	public JsonObject handle(InetAddress address, int port, JsonObject object) {
 		if (!object.has("server") || !object.has("players"))
-			return;
+			return null;
 		ProxyServer proxy = ProxyServer.getInstance();
 		ServerInfo info = proxy.getServerInfo(object.get("server").getAsString());
 		ServerConnectRequest connection = ServerConnectRequest.builder()
@@ -39,6 +39,7 @@ public class ConnectHandler extends Executor {
 				return;
 			}
 		});
+		return null;
 	}
 
 }

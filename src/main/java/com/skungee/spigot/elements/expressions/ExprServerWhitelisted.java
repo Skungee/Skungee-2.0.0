@@ -6,7 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.skungee.spigot.objects.SkungeeServerMapper;
+import com.skungee.shared.objects.SkungeeServer;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
@@ -19,17 +19,17 @@ public class ExprServerWhitelisted extends SimpleExpression<OfflinePlayer> {
 
 	static {
 		Skript.registerExpression(ExprServerWhitelisted.class, OfflinePlayer.class, ExpressionType.PROPERTY, 
-				"[(all [[of] the]|the)] whitelisted players of [server[s]] %skungeeservers/strings%",
-				"[(all [[of] the]|the)] [server[s]] %skungeeservers/strings%'[s] whitelisted players");
+				"[(all [[of] the]|the)] whitelisted players of [server[s]] %skungeeservers%",
+				"[(all [[of] the]|the)] [server[s]] %skungeeservers%'[s] whitelisted players");
 	}
 
 	@Nullable
-	private Expression<Object> servers;
+	private Expression<SkungeeServer> servers;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		servers = (Expression<Object>) exprs[0];
+		servers = (Expression<SkungeeServer>) exprs[0];
 		return true;
 	}
 
@@ -37,8 +37,6 @@ public class ExprServerWhitelisted extends SimpleExpression<OfflinePlayer> {
 	@Nullable
 	protected OfflinePlayer[] get(Event event) {
 		return Arrays.stream(servers.getArray(event))
-				.map(new SkungeeServerMapper())
-				.filter(server -> server != null)
 				.map(server -> server.getWhitelistedPlayers())
 				.flatMap(whitelisted -> whitelisted.stream())
 				.toArray(OfflinePlayer[]::new);

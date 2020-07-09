@@ -3,14 +3,13 @@ package com.skungee.spigot.elements.expressions;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.skungee.shared.objects.SkungeeServer;
-import com.skungee.spigot.objects.SkungeeServerMapper;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
-public class ExprServerVersion extends SimplePropertyExpression<Object, String> {
+public class ExprServerVersion extends SimplePropertyExpression<SkungeeServer, String> {
 
 	static {
-		register(ExprServerVersion.class, String.class, "version", "skungeeservers/strings");
+		register(ExprServerVersion.class, String.class, "version", "skungeeservers");
 	}
 
 	@Override
@@ -20,10 +19,7 @@ public class ExprServerVersion extends SimplePropertyExpression<Object, String> 
 
 	@Override
 	@Nullable
-	public String convert(Object object) {
-		SkungeeServer server = new SkungeeServerMapper().apply(object);
-		if (server == null)
-			return null;
+	public String convert(SkungeeServer server) {
 		return server.getVersion();
 	}
 

@@ -1,6 +1,5 @@
 package com.skungee.spigot.elements.expressions;
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -10,7 +9,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.SpigotSkungee;
-import com.skungee.spigot.objects.SkungeeServerMapper;
 import com.skungee.spigot.packets.PlayersPacket;
 
 import ch.njol.skript.Skript;
@@ -23,16 +21,16 @@ import ch.njol.util.Kleenean;
 public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 
 	static {
-		Skript.registerExpression(ExprProxyPlayers.class, SkungeePlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] prox(ied|y) players [o(f|n) server[s] %-skungeeservers/strings%]");
+		Skript.registerExpression(ExprProxyPlayers.class, SkungeePlayer.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] prox(ied|y) players [o(f|n) server[s] %-skungeeservers%]");
 	}
 
 	@Nullable
-	private Expression<Object> servers;
+	private Expression<SkungeeServer> servers;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		servers = (Expression<Object>) exprs[0];
+		servers = (Expression<SkungeeServer>) exprs[0];
 		return true;
 	}
 
@@ -40,12 +38,8 @@ public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 	@Nullable
 	protected SkungeePlayer[] get(Event event) {
 		PlayersPacket packet = new PlayersPacket();
-		if (servers != null) {
-			packet.setServers(Arrays.stream(servers.getArray(event))
-					.map(new SkungeeServerMapper())
-					.filter(server -> server != null)
-					.toArray(SkungeeServer[]::new));
-		}
+		if (servers != null)
+			packet.setServers(servers.getArray(event));
 		try {
 			return SpigotSkungee.getInstance().getJapsonClient().sendPacket(packet).stream()
 					.toArray(SkungeePlayer[]::new);
@@ -68,7 +62,7 @@ public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 	public String toString(@Nullable Event event, boolean debug) {
 		if (event == null) // Skript Debug
 			return "proxied players";
-		return "proxied players" + servers != null ? " on " + servers.getArray(event) : "";
+		return "proxied players" + servers != null ? " on " + servers.toString(event, debug) : "";
 	}
 
 }

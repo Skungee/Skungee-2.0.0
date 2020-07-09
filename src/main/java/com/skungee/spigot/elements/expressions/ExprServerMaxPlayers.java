@@ -3,15 +3,14 @@ package com.skungee.spigot.elements.expressions;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.skungee.shared.objects.SkungeeServer;
-import com.skungee.spigot.objects.SkungeeServerMapper;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
-public class ExprServerMaxPlayers extends SimplePropertyExpression<Object, Number> {
+public class ExprServerMaxPlayers extends SimplePropertyExpression<SkungeeServer, Number> {
 
 	static {
 		// Property name is to avoid confusion with 'player count of %skungeeservers%'
-		register(ExprServerMaxPlayers.class, Number.class, "(max[imum] player count|[max[imum]] player limit)", "skungeeservers/strings");
+		register(ExprServerMaxPlayers.class, Number.class, "(max[imum] player count|[max[imum]] player limit)", "skungeeservers");
 	}
 
 	@Override
@@ -21,10 +20,7 @@ public class ExprServerMaxPlayers extends SimplePropertyExpression<Object, Numbe
 
 	@Override
 	@Nullable
-	public Number convert(Object object) {
-		SkungeeServer server = new SkungeeServerMapper().apply(object);
-		if (server == null)
-			return null;
+	public Number convert(SkungeeServer server) {
 		return server.getMaxPlayerLimit();
 	}
 
