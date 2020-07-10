@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
@@ -18,16 +19,16 @@ import org.reflections.Reflections;
 import com.google.common.collect.Lists;
 import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
+import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
+import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Platform;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -35,10 +36,11 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
-public class BungeeSkungee extends Plugin implements Platform {
+public class BungeeSkungee extends Plugin implements ProxyPlatform {
 
+	private BungeecordConfiguration configuration;
+	private VariableManager variableManager;
 	private static BungeeSkungee instance;
-	private Configuration configuration;
 	private JapsonServer japson;
 
 	@SuppressWarnings("deprecation")
@@ -58,17 +60,13 @@ public class BungeeSkungee extends Plugin implements Platform {
 //				configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
 //				consoleMessage("&eThere is a new version. Generating new " + "configuration.yml");
 //			}
-			this.configuration = configuration;
+			this.configuration = new BungeecordConfiguration(configuration, 1);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
 		try {
-//			String host = configuration.getString("bind-address", "0.0.0.0");
-//			if (!host.equalsIgnoreCase("localhost"))
-//				japson = new JapsonServer(configuration.getString("bind-address", "0.0.0.0"), configuration.getInt("port", 8000));
-//			else
-			japson = new JapsonServer(configuration.getInt("port", 8000));
+			japson = new JapsonServer(configuration.getBindAddress(), configuration.getPort());
 			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.bungeecord.handlers")
 					.getSubTypesOf(Handler.class).stream().map(clazz -> {
 						try {
@@ -78,9 +76,9 @@ public class BungeeSkungee extends Plugin implements Platform {
 							return null;
 						}
 					}).filter(handler -> handler != null).toArray(Handler[]::new));
-			if (configuration.getBoolean("debug", false))
+			if (configuration.isDebug())
 				japson.enableDebug();
-			japson.setPacketBufferSize(configuration.getInt("protocol.buffer-size", 1024));
+			japson.setPacketBufferSize(configuration.getBufferSize());
 			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost());
 			address.addAll(getProxy().getServers().values().stream().map(server -> server.getAddress().getAddress())
 					.collect(Collectors.toList()));
@@ -93,25 +91,29 @@ public class BungeeSkungee extends Plugin implements Platform {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		consoleMessage("Started on " + japson.getAddress().getHostAddress() + ":" + configuration.getInt("port", 8000));
+		variableManager = new VariableManager(this);
+		consoleMessage("Started on " + japson.getAddress().getHostAddress() + ":" + configuration.getPort());
 	}
 
 	public static BungeeSkungee getInstance() {
 		return instance;
 	}
 
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
 	public JapsonServer getJapsonServer() {
 		return japson;
 	}
 
-	public void consoleMessage(String... messages) {
-		for (String string : messages)
-			getProxy().getConsole().sendMessage(TextComponent
-					.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "[Skungee] " + string)));
+	@Override
+	public void consoleMessages(String... strings) {
+		for (String string : strings)
+			ProxyServer.getInstance().getLogger().info(ChatColor.translateAlternateColorCodes('&', "&7[&6Skungee&7] " + string));
+	}
+
+	public void debugMessages(String... strings) {
+		if (!configuration.isDebug())
+			return;
+		for (String string : strings)
+			consoleMessage("&b" + string);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -173,6 +175,31 @@ public class BungeeSkungee extends Plugin implements Platform {
 		if (handler.getID() != Packets.API.getPacketId())
 			throw new IllegalAccessException("The API handler must represent the Packets.API's packet ID");
 		japson.registerHandlers(handler);
+	}
+
+	@Override
+	public BungeecordConfiguration getPlatformConfiguration() {
+		return configuration;
+	}
+
+	@Override
+	public void schedule(Runnable task, long delay, long period, TimeUnit unit) {
+		ProxyServer.getInstance().getScheduler().schedule(this, task, delay, period, unit);
+	}
+
+	@Override
+	public void delay(Runnable task, long delay, TimeUnit unit) {
+		ProxyServer.getInstance().getScheduler().schedule(this, task, delay, unit);
+	}
+
+	@Override
+	public VariableManager getVariableManager() {
+		return variableManager;
+	}
+
+	@Override
+	public File getPlatformFolder() {
+		return getDataFolder();
 	}
 
 }

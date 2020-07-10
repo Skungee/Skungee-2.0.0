@@ -7,6 +7,9 @@ debug: false
 # This value should match the same port defined in the SimpleSkungee configuration on the Proxy.
 port: 8000
 
+# The address to bind to.
+bind-address: "127.0.0.1"
+
 # If Skungee should parse a word as a Skungee server. There is regex checking to not conflict.
 # Example: loop all players on proxy server hub:
 skungee-server-parsing: false

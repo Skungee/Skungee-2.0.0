@@ -1,4 +1,38 @@
-[Configuration]
-bind-address="127.0.0.1"
-port=8000
-buffer-size=1024
+
+# The version is to help determine which version this config is. Please don't modify this value.
+configuration-version = 1
+
+# General configurations.
+[configurations]
+
+# Print additional information in the console. Useful for figuring out errors and issues.
+debug = false
+# The address to bind to.
+bind-address = "127.0.0.1"
+# This value should be copied in every other SimpleSkungee spigot server configuration.
+port = 8000
+
+# Configurations relating to the Japson protocol.
+[protocol]
+
+# The packet buffer size in bytes.
+# Default size is the UDP standard 1024
+#
+# If the protocol is sending larger amounts of data (You have a large amount of players, and/or servers)
+# or you're recieving an EOFException. You may want to or be instructed to increase this value.
+buffer-size = 1024
+
+[network-variables]
+
+# The storage type to use.
+# The SkungeeAPI allows for registering custom storage systems.
+type = "CSV"
+
+[network-variables.backups]
+
+# If Skungee should backup the variables.
+enabled = true
+# The interval in minutes to backup the variables at.
+interval-minutes = 120
+# If a message should be broadcasted to the console stating the variables were backed up.
+console-messages = true

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
@@ -23,9 +24,10 @@ import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
+import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
+import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Platform;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
@@ -36,18 +38,19 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
-import com.velocitypowered.api.proxy.config.ProxyConfig;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 
 /**
  * Velocity
  */
 @Plugin(id = "skungee", name = "Skungee", version = "@version@",
-        description = "The simplest Skript addon for Bungeecord.", authors = {"Skungee"})
-public class VelocitySkungee implements Platform {
+		description = "The simplest Skript addon for Bungeecord.", authors = {"Skungee"})
+public class VelocitySkungee implements ProxyPlatform {
 
-	private final Toml configuration;
+	private final VelocityConfiguration configuration;
+	private final VariableManager variableManager;
 	private final ProxyServer proxy;
+	private final File dataFolder;
 	private final Logger logger;
 	private JapsonServer japson;
 
@@ -55,35 +58,36 @@ public class VelocitySkungee implements Platform {
 	public VelocitySkungee(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
 		this.proxy = proxy;
 		this.logger = logger;
-		File folder = path.toFile();
-		File file = new File(folder, "config.toml");
+		dataFolder = path.toFile();
+		File file = new File(dataFolder, "config.toml");
 		if (!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
 
-        if (!file.exists()) {
-            try (InputStream input = getClass().getResourceAsStream("/" + file.getName())) {
-                if (input != null) {
-                    Files.copy(input, file.toPath());
-                } else {
-                    file.createNewFile();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        configuration = new Toml().read(file);
-        try {
+		if (!file.exists()) {
+			try (InputStream input = getClass().getResourceAsStream("/" + file.getName())) {
+				if (input != null) {
+					Files.copy(input, file.toPath());
+				} else {
+					file.createNewFile();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		configuration = new VelocityConfiguration(new Toml().read(file), 1);
+		try {
 			Skungee.setPlatform(this);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+		variableManager = new VariableManager(this);
 		logger.info("SimpleSkungee has been enabled!");
 	}
 
 	@Subscribe
 	public void onProxyInitialization(ProxyInitializeEvent event) {
 		try {
-			japson = new JapsonServer(configuration.getString("bind-address", "0.0.0.0"), configuration.getLong("port", 8000L).intValue());
+			japson = new JapsonServer(configuration.getBindAddress(), configuration.getPort());
 			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.velocity.handlers").getSubTypesOf(Handler.class).stream()
 					.map(clazz -> {
 						try {
@@ -95,9 +99,9 @@ public class VelocitySkungee implements Platform {
 					})
 					.filter(handler -> handler != null)
 					.toArray(Handler[]::new));
-			if (configuration.getBoolean("debug", false))
+			if (configuration.isDebug())
 				japson.enableDebug();
-			japson.setPacketBufferSize(configuration.getLong("protocol.buffer-size", 1024L).intValue());
+			japson.setPacketBufferSize(configuration.getBufferSize());
 			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost());
 			address.addAll(proxy.getAllServers().stream()
 					.map(server -> server.getServerInfo().getAddress().getAddress())
@@ -108,25 +112,20 @@ public class VelocitySkungee implements Platform {
 		}
 	}
 
-	public void consoleMessage(String string) {
-		logger.info(string);
-	}
-
-	public ProxyConfig getConfiguration() {
-		return null;
-	}
-
 	public ProxyServer getProxy() {
 		return proxy;
 	}
 
-	public void consoleMessage(String... messages) {
+	@Override
+	public void consoleMessages(String... messages) {
 		for (String message : messages)
 			logger.info(message);
 	}
 
-	public void debugMessage(String message) {
-		logger.debug(message);
+	@Override
+	public void debugMessages(String... messages) {
+		for (String message : messages)
+			logger.debug(message);
 	}
 
 	@Override
@@ -193,6 +192,31 @@ public class VelocitySkungee implements Platform {
 		if (handler.getID() != Packets.API.getPacketId())
 			throw new IllegalAccessException("The API handler must represent the Packets.API packet ID");
 		japson.registerHandlers(handler);
+	}
+
+	@Override
+	public VelocityConfiguration getPlatformConfiguration() {
+		return configuration;
+	}
+
+	@Override
+	public void schedule(Runnable task, long delay, long period, TimeUnit unit) {
+		proxy.getScheduler().buildTask(this, task).repeat(period, unit);
+	}
+
+	@Override
+	public void delay(Runnable task, long delay, TimeUnit unit) {
+		proxy.getScheduler().buildTask(this, task).delay(delay, unit);
+	}
+
+	@Override
+	public VariableManager getVariableManager() {
+		return variableManager;
+	}
+
+	@Override
+	public File getPlatformFolder() {
+		return dataFolder;
 	}
 
 }

@@ -23,14 +23,20 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 			throw new JsonParseException("A ServerData json element did not contain the property 'motd'");
 		if (!object.has("limit"))
 			throw new JsonParseException("A ServerData json element did not contain the property 'limit'");
-		if (!object.has("verson"))
-			throw new JsonParseException("A ServerData json element did not contain the property 'verson'");
+		if (!object.has("version"))
+			throw new JsonParseException("A ServerData json element did not contain the property 'version'");
 		if (!object.has("whitelisted"))
 			throw new JsonParseException("A ServerData json element did not contain the property 'whitelisted'");
 		ServerData data = new ServerData();
-		data.setMaxPlayerLimit(object.get("limit").getAsInt());
-		data.setVersion(object.get("version").getAsString());
-		data.setMotd(object.get("motd").getAsString());
+		JsonElement limitElement = object.get("limit");
+		if (limitElement != null && !limitElement.isJsonNull())
+			data.setMaxPlayerLimit(limitElement.getAsInt());
+		JsonElement versionElement = object.get("version");
+		if (versionElement != null && !versionElement.isJsonNull())
+			data.setVersion(versionElement.getAsString());
+		JsonElement motdElement = object.get("motd");
+		if (motdElement != null && !motdElement.isJsonNull())
+			data.setMotd(motdElement.getAsString());
 		data.setWhitelisted(Streams.stream(object.get("whitelisted").getAsJsonArray())
 				.map(element -> element.getAsString())
 				.map(string -> UUID.fromString(string))

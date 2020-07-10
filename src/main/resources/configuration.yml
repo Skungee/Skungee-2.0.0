@@ -2,13 +2,13 @@
 configuration-version: 1
 
 # Print additional information in the console. Useful for figuring out errors and issues.
-debug: true
+debug: false
 
 # This value should be copied in every other SimpleSkungee spigot server configuration.
 port: 8000
 
 # The address to bind to.
-bind-address: "localhost"
+bind-address: "127.0.0.1"
 
 # Settings relating to the protocol.
 protocol:
@@ -18,3 +18,16 @@ protocol:
     # If the protocol is sending larger amounts of data (You have a large amount of players, and/or servers)
     # or you're recieving an EOFException. You may want to or be instructed to increase this value.
     buffer-size: 1024
+
+# All configurations relating to network-variables
+network-variables:
+    # The storage type to use.
+    # The SkungeeAPI allows for registering custom storage systems.
+    type: "CSV"
+    backups:
+        # If Skungee should backup the variables.
+        enabled: true
+        # The interval in minutes to backup the variables at.
+        interval-minutes: 120
+        # If a message should be broadcasted to the console stating the variables were backed up.
+        console-messages: true

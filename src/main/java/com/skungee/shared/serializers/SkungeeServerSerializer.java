@@ -24,7 +24,7 @@ public class SkungeeServerSerializer implements Serializer<SkungeeServer> {
 			throw new JsonParseException("A SkungeeServer json element did not contain the property 'online'");
 		if (!object.has("data"))
 			throw new JsonParseException("A SkungeeServer json element did not contain the property 'data'");
-		ServerData data = context.deserialize(object.get("data"), ServerData.class);
+		ServerData data = dataSerializer.deserialize(object.get("data"), ServerData.class, null);
 		return new SkungeeServer(object.get("name").getAsString(), object.get("online").getAsBoolean(), data);
 	}
 

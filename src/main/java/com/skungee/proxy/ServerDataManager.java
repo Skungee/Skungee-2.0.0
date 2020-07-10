@@ -2,6 +2,7 @@ package com.skungee.proxy;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class ServerDataManager {
 
 	public static class ServerData {
 
-		private Set<UUID> whitelisted;
+		private Set<UUID> whitelisted = new HashSet<>();
 		private String motd, version;
 		private int limit;
 

@@ -6,8 +6,8 @@ import java.util.Optional;
 import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Handler;
+import com.skungee.proxy.ProxyPlatform;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Platform;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.shared.serializers.SkungeeServerSerializer;
@@ -23,7 +23,7 @@ public class ServerHandler extends Handler {
 	@Override
 	public JsonObject handle(InetAddress address, int port, JsonObject object) {
 		JsonObject returning = new JsonObject();
-		Platform platform = Skungee.getPlatform();
+		ProxyPlatform platform = (ProxyPlatform) Skungee.getPlatform();
 		if (object.has("name")) {
 			Optional<SkungeeServer> server = platform.getServer(object.get("name").getAsString());
 			if (server.isPresent())
