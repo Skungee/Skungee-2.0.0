@@ -30,8 +30,10 @@ public class NetworkVariableSerializer implements Serializer<NetworkVariable> {
 				JsonArray bytes = valueObject.get("bytes").getAsJsonArray();
 				byte[] data = new byte[bytes.size()];
 				int i = 0;
-				for (JsonElement byteElement : bytes)
+				for (JsonElement byteElement : bytes) {
 					data[i] = byteElement.getAsByte();
+					i++;
+				}
 				return new Value(typeName, data);
 			})
 			.toArray(Value[]::new);
