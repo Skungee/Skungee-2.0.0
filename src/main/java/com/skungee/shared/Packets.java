@@ -2,6 +2,7 @@ package com.skungee.shared;
 
 public enum Packets {
 
+	// 0x00 is for Japson's heartbeats internally.
 	/**
 	 * Reserved for API requests.
 	 */

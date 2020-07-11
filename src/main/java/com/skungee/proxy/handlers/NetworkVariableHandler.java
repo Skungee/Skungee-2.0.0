@@ -74,6 +74,7 @@ public class NetworkVariableHandler extends Handler {
 			Streams.stream(object.get("names").getAsJsonArray())
 					.map(element -> element.getAsString())
 					.map(name -> new NetworkVariable(name, storage.get(name)))
+					.filter(variable -> !variable.areValuesNull())
 					.map(variable -> serializer.serialize(variable, NetworkVariable.class, null))
 					.forEach(element -> variables.add(element));
 			returning.add("variables", variables);

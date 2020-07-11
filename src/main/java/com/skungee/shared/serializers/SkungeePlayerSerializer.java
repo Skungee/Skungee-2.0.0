@@ -17,11 +17,11 @@ public class SkungeePlayerSerializer implements Serializer<SkungeePlayer> {
 	public SkungeePlayer deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
 		JsonObject object = element.getAsJsonObject();
 		if (!object.has("name"))
-			throw new JsonParseException("A SkungeeServer json element did not contain the property 'name'");
+			throw new JsonParseException("A SkungeePlayer json element did not contain the property 'name'");
 		if (!object.has("uuid"))
-			throw new JsonParseException("A SkungeeServer json element did not contain the property 'uuid'");
+			throw new JsonParseException("A SkungeePlayer json element did not contain the property 'uuid'");
 		if (!object.has("server"))
-			throw new JsonParseException("A SkungeeServer json element did not contain the property 'server'");
+			throw new JsonParseException("A SkungeePlayer json element did not contain the property 'server'");
 		return new SkungeePlayer(object.get("name").getAsString(), UUID.fromString(object.get("uuid").getAsString()), object.get("server").getAsString());
 	}
 

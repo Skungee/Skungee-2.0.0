@@ -7,8 +7,8 @@ import java.util.Optional;
 public class NetworkVariable {
 
 	private SkriptChangeMode changer;
-	private Value[] values;
 	private final String name;
+	private Value[] values;
 
 	public NetworkVariable(String name, Value... values) {
 		this.values = values;
@@ -17,6 +17,10 @@ public class NetworkVariable {
 
 	public void setChanger(SkriptChangeMode changer) {
 		this.changer = changer;
+	}
+
+	public boolean areValuesNull() {
+		return values == null;
 	}
 
 	public Optional<SkriptChangeMode> getChanger() {
