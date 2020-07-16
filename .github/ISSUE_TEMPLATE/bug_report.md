@@ -10,7 +10,10 @@ assignees: ''
 ## Description
 
 
-## Expected Behavior
+## Screenshots or Errors
+
+
+## Actual Behavior
 
 
 ## Actual Behavior
