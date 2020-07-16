@@ -77,7 +77,7 @@ dependencies {
 	testImplementation (group: 'com.sitrica', name: 'japson-beta', version: '1.0.8.2-SNAPSHOT')
 	testImplementation (group: 'org.reflections', name: 'reflections', version: '0.9.12')
 
-	shadow (group: 'org.json', name: 'json', version: '20180813')
+	shadow (group: 'org.json', name: 'json', version: '20200518')
 
 }
 
