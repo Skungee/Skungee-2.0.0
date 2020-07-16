@@ -55,7 +55,7 @@ dependencies {
 	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.15.2-R0.1-SNAPSHOT')
 
 	// Bungeecord
-	implementation (group: 'net.md-5', name: 'bungeecord-protocol', version: '1.15-SNAPSHOT')
+	implementation (group: 'net.md-5', name: 'bungeecord-protocol', version: '1.16-R0.3-SNAPSHOT')
 	implementation (group: 'net.md-5', name: 'bungeecord-api', version: '1.15-SNAPSHOT')
 
 	// Skript
