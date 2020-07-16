@@ -37,7 +37,7 @@ repositories {
 		url 'https://maven.pkg.github.com/Sitrica/Japson/'
 		credentials {
             username = "Sitrica"
-            password = System.getenv("PACKAGES_KEY")
+            password = System.getenv("GITHUB_PACKAGES_KEY")
         }
 	}
 
@@ -88,7 +88,7 @@ publishing {
 			url = uri("https://maven.pkg.github.com/Skungee/Skungee-2.0.0")
 			credentials {
 				username = 'Skungee'
-				password = project.findProperty("gpr.key") ?: System.getenv("PACKAGES_KEY")
+				password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_PACKAGES_KEY")
 			}
 		}
 	}
