@@ -59,9 +59,6 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 			Skript.error("Network variables can not be a local variable.");
 			return false;
 		}
-//		String name = StringUtils.substringBetween(variable.toString(), "{", "}");
-//		// Creates a new VariableString which is what Skript accepts to get Variables.
-//		variableString = VariableString.newInstance(name, StringMode.VARIABLE_NAME);
 		return true;
 	}
 
