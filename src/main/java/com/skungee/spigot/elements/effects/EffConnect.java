@@ -20,7 +20,7 @@ import ch.njol.util.Kleenean;
 public class EffConnect extends Effect {
 
 	static {
-		Skript.registerEffect(EffConnect.class, "(connect|send) %skungeeplayers% to [proxy] [server] %skungeeserver%");
+		Skript.registerEffect(EffConnect.class, "(connect|send) [[prox(ied|y)] players] %skungeeplayers% to [proxy] [server] %skungeeserver%");
 	}
 
 	private Expression<SkungeePlayer> players;

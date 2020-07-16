@@ -3,6 +3,8 @@ package com.skungee.spigot.packets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -13,6 +15,7 @@ import com.skungee.shared.Packets;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.shared.serializers.SkungeePlayerSerializer;
+import com.skungee.spigot.SpigotSkungee;
 
 public class PlayersPacket extends ReturnablePacket<List<SkungeePlayer>> {
 
@@ -73,6 +76,10 @@ public class PlayersPacket extends ReturnablePacket<List<SkungeePlayer>> {
 			} catch (Exception e) {}
 		});
 		return players;
+	}
+
+	public List<SkungeePlayer> send() throws TimeoutException, InterruptedException, ExecutionException {
+		return SpigotSkungee.getInstance().getJapsonClient().sendPacket(this);
 	}
 
 }
