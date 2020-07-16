@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -24,10 +23,8 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.lang.Variable;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.StringMode;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -37,7 +34,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 		Skript.registerExpression(ExprNetworkVariable.class, Object.class, ExpressionType.SIMPLE, "(network|proxy) variable %objects%");
 	}
 
-	private VariableString variableString;
+	//private VariableString variableString;
 	private Variable<?> variable;
 
 	@Override
@@ -62,9 +59,9 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 			Skript.error("Network variables can not be a local variable.");
 			return false;
 		}
-		String name = StringUtils.substringBetween(variable.toString(), "{", "}");
-		// Creates a new VariableString which is what Skript accepts to get Variables.
-		variableString = VariableString.newInstance(name, StringMode.VARIABLE_NAME);
+//		String name = StringUtils.substringBetween(variable.toString(), "{", "}");
+//		// Creates a new VariableString which is what Skript accepts to get Variables.
+//		variableString = VariableString.newInstance(name, StringMode.VARIABLE_NAME);
 		return true;
 	}
 
@@ -75,10 +72,10 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 		List<NetworkVariable> variables = new ArrayList<>();;
 		try {
 			NetworkVariablePacket packet = new NetworkVariablePacket(new NetworkVariable[0])
-					.setNames(variableString.toString(event));
+					.setNames(variable.getName().toString(event));
 			variables.addAll(instance.getJapsonClient().sendPacket(packet));
 		} catch (TimeoutException | InterruptedException | ExecutionException e) {
-			instance.consoleMessage("Timed out attempting to send network variable {" + variableString.toString(event) + "}");
+			instance.consoleMessage("Timed out attempting to send network variable {" + variable.getName().toString(event) + "}");
 		}
 		return variables.stream()
 				.flatMap(variable -> Arrays.stream(variable.getValues()))
@@ -127,7 +124,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 				values[i] = new Value(value.type, value.data);
 			}
 		}
-		NetworkVariable variable = new NetworkVariable(variableString.toString(event), values);
+		NetworkVariable variable = new NetworkVariable(this.variable.getName().toString(event), values);
 		variable.setChanger(changer);
 		SpigotSkungee instance = SpigotSkungee.getInstance();
 		try {

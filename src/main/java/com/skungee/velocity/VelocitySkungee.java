@@ -102,7 +102,7 @@ public class VelocitySkungee implements ProxyPlatform {
 			if (configuration.isDebug())
 				japson.enableDebug();
 			japson.setPacketBufferSize(configuration.getBufferSize());
-			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost());
+			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost(), InetAddress.getByName("127.0.0.1"));
 			address.addAll(proxy.getAllServers().stream()
 					.map(server -> server.getServerInfo().getAddress().getAddress())
 					.collect(Collectors.toList()));

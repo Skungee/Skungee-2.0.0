@@ -79,7 +79,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			if (configuration.isDebug())
 				japson.enableDebug();
 			japson.setPacketBufferSize(configuration.getBufferSize());
-			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost());
+			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost(), InetAddress.getByName("127.0.0.1"));
 			address.addAll(getProxy().getServers().values().stream().map(server -> server.getAddress().getAddress())
 					.collect(Collectors.toList()));
 			japson.setAllowedAddresses(address.stream().toArray(InetAddress[]::new));

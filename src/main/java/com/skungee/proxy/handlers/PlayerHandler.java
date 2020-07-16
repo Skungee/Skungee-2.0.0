@@ -2,7 +2,6 @@ package com.skungee.proxy.handlers;
 
 import java.net.InetAddress;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,6 @@ import com.skungee.proxy.ProxyPlatform;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
-import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.shared.serializers.SkungeePlayerSerializer;
 
 public class PlayerHandler extends Handler {
@@ -30,9 +28,7 @@ public class PlayerHandler extends Handler {
 		JsonObject returning = new JsonObject();
 		JsonArray array = new JsonArray();
 		ProxyPlatform platform = (ProxyPlatform) Skungee.getPlatform();
-		if (object.has("servers")) {
-			if (object.get("servers").getAsJsonArray().size() == 0)
-				return returning;
+		if (object.has("servers") && object.get("servers").getAsJsonArray().size() != 0) {
 			List<String> serverNames = Streams.stream(object.get("servers").getAsJsonArray())
 					.map(element -> element.getAsString())
 					.collect(Collectors.toList());
@@ -64,15 +60,7 @@ public class PlayerHandler extends Handler {
 					.filter(player -> names.contains(player.getUniqueId()))
 					.forEach(player -> array.add(serializer.serialize(player, SkungeePlayer.class, null)));
 		} else {
-			List<SkungeeServer> servers = Streams.stream(object.get("servers").getAsJsonArray())
-					.map(element -> element.getAsString())
-					.map(name -> platform.getServer(name))
-					.filter(Optional::isPresent)
-					.map(Optional::get)
-					.collect(Collectors.toList());
-			platform.getPlayers().stream()
-					.filter(player -> servers.stream().anyMatch(server -> player.getCurrentServer().equals(server.getName())))
-					.forEach(player -> array.add(serializer.serialize(player, SkungeePlayer.class, null)));
+			platform.getPlayers().forEach(player -> array.add(serializer.serialize(player, SkungeePlayer.class, null)));
 		}
 		returning.add("players", array);
 		return returning;

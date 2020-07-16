@@ -60,9 +60,9 @@ public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		if (event == null) // Skript Debug
+		if (event == null || servers == null) // Skript Debug
 			return "proxied players";
-		return "proxied players" + servers != null ? " on " + servers.toString(event, debug) : "";
+		return "proxied players on " + servers.toString(event, debug);
 	}
 
 }

@@ -41,7 +41,7 @@ public class PlayersPacket extends ReturnablePacket<List<SkungeePlayer>> {
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = new JsonObject();
-		if (servers != null) {
+		if (servers != null && servers.length > 0) {
 			JsonArray array = new JsonArray();
 			for (SkungeeServer server : servers)
 				array.add(server.getName());
