@@ -1,6 +1,6 @@
 ---
 name: Installation support
-about: Get need help with installation
+about: Get support with installation issues
 title: ''
 labels: support question
 assignees: ''
