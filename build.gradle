@@ -46,7 +46,7 @@ repositories {
 dependencies {
 
 	// Nullable annotation
-	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.400')
+	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.600')
 
 	// Velocity
 	implementation (group: 'com.velocitypowered', name: 'velocity-api', version: '1.0.0-SNAPSHOT')
