@@ -17,7 +17,6 @@
 *.tar.gz
 *.rar
 *.settings
-*.gradle
 .settings/
 bin/
 build/
