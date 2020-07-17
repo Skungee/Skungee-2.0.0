@@ -2,6 +2,8 @@ package com.skungee.spigot.packets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -11,6 +13,7 @@ import com.sitrica.japson.shared.ReturnablePacket;
 import com.skungee.shared.Packets;
 import com.skungee.shared.objects.NetworkVariable;
 import com.skungee.shared.serializers.NetworkVariableSerializer;
+import com.skungee.spigot.SpigotSkungee;
 
 /**
  * Only used when returning variables and when using a changer.
@@ -61,6 +64,10 @@ public class NetworkVariablePacket extends ReturnablePacket<List<NetworkVariable
 			} catch (Exception e) {}
 		});
 		return variables;
+	}
+
+	public List<NetworkVariable> send() throws TimeoutException, InterruptedException, ExecutionException {
+		return SpigotSkungee.getInstance().getJapsonClient().sendPacket(this);
 	}
 
 }

@@ -4,13 +4,15 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 public class NetworkVariable {
 
 	private SkriptChangeMode changer;
 	private final String name;
 	private Value[] values;
 
-	public NetworkVariable(String name, Value... values) {
+	public NetworkVariable(String name, @NonNull Value... values) {
 		this.values = values;
 		this.name = name;
 	}
@@ -19,8 +21,8 @@ public class NetworkVariable {
 		this.changer = changer;
 	}
 
-	public boolean areValuesNull() {
-		return values == null;
+	public boolean areValuesValid() {
+		return values != null && values.length != 0;
 	}
 
 	public Optional<SkriptChangeMode> getChanger() {

@@ -37,16 +37,16 @@ public class NetworkVariableHandler extends Handler {
 			for (JsonElement element : variables) {
 				NetworkVariable variable = serializer.deserialize(element, NetworkVariable.class, null);
 				String variableString = variable.getVariableString();
-				Value[] values = variable.getValues();
 				if (variableString == null)
 					return returning;
+				Value[] values = variable.getValues();
 				Optional<SkriptChangeMode> mode = variable.getChanger();
 				if (mode.isPresent()) {
 					ArrayList<Value> modify = new ArrayList<Value>();
 					Value[] data = storage.get(variableString);
 					if (data != null)
 						modify = Lists.newArrayList(data);
-					if (values == null && !(mode.get() == SkriptChangeMode.RESET || mode.get() == SkriptChangeMode.DELETE))
+					if (!variable.areValuesValid() && !(mode.get() == SkriptChangeMode.RESET || mode.get() == SkriptChangeMode.DELETE))
 						return returning;
 					switch (mode.get()) {
 						case ADD:
@@ -74,7 +74,7 @@ public class NetworkVariableHandler extends Handler {
 			Streams.stream(object.get("names").getAsJsonArray())
 					.map(element -> element.getAsString())
 					.map(name -> new NetworkVariable(name, storage.get(name)))
-					.filter(variable -> !variable.areValuesNull())
+					.filter(variable -> variable.areValuesValid())
 					.map(variable -> serializer.serialize(variable, NetworkVariable.class, null))
 					.forEach(element -> variables.add(element));
 			returning.add("variables", variables);

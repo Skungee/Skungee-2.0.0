@@ -94,7 +94,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 	public String toString(@Nullable Event event, boolean debug) {
 		if (event == null)
 			return "network variable";
-		return "network variable " + variable.toString(event, debug);
+		return "network variable {" + variable.getName().toString(event) + "}";
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 		SkriptChangeMode changer = SkriptChangeMode.valueOf(mode.toString());
 		if (changer == null)
 			return;
-		Value[] values = null;
+		Value[] values = new Value[0];
 		if (delta != null) {
 			values = new Value[delta.length];
 			for (int i = 0; i < delta.length; i++) {
@@ -125,7 +125,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 		variable.setChanger(changer);
 		SpigotSkungee instance = SpigotSkungee.getInstance();
 		try {
-			instance.getJapsonClient().sendPacket(new NetworkVariablePacket(variable));
+			new NetworkVariablePacket(variable).send();
 		} catch (TimeoutException | InterruptedException | ExecutionException e) {
 			instance.consoleMessage("Timed out attempting to send network variable {" + variable.getVariableString() + "}");
 		}

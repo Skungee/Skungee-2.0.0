@@ -21,22 +21,23 @@ public class NetworkVariableSerializer implements Serializer<NetworkVariable> {
 		JsonObject object = element.getAsJsonObject();
 		if (!object.has("name"))
 			throw new JsonParseException("A NetworkVariable json element did not contain the property 'name'");
-		if (!object.has("values"))
-			throw new JsonParseException("A NetworkVariable json element did not contain the property 'values'");
-		Value[] values = Streams.stream(object.get("values").getAsJsonArray())
-			.map(value -> {
-				JsonObject valueObject = value.getAsJsonObject();
-				String typeName = valueObject.get("type").getAsString();
-				JsonArray bytes = valueObject.get("bytes").getAsJsonArray();
-				byte[] data = new byte[bytes.size()];
-				int i = 0;
-				for (JsonElement byteElement : bytes) {
-					data[i] = byteElement.getAsByte();
-					i++;
-				}
-				return new Value(typeName, data);
-			})
-			.toArray(Value[]::new);
+		Value[] values = new Value[0];
+		if (object.has("values")) {
+			values = Streams.stream(object.get("values").getAsJsonArray())
+					.map(value -> {
+						JsonObject valueObject = value.getAsJsonObject();
+						String typeName = valueObject.get("type").getAsString();
+						JsonArray bytes = valueObject.get("bytes").getAsJsonArray();
+						byte[] data = new byte[bytes.size()];
+						int i = 0;
+						for (JsonElement byteElement : bytes) {
+							data[i] = byteElement.getAsByte();
+							i++;
+						}
+						return new Value(typeName, data);
+					})
+					.toArray(Value[]::new);
+		}
 		NetworkVariable variable = new NetworkVariable(object.get("name").getAsString(), values);
 		if (object.has("changer"))
 			variable.setChanger(SkriptChangeMode.valueOf(object.get("changer").getAsString()));
@@ -48,6 +49,8 @@ public class NetworkVariableSerializer implements Serializer<NetworkVariable> {
 		JsonObject object = new JsonObject();
 		object.addProperty("name", variable.getVariableString());
 		variable.getChanger().ifPresent(changer -> object.addProperty("changer", changer.name()));
+		if (!variable.areValuesValid())
+			return object;
 		JsonArray values = new JsonArray();
 		for (Value value : variable.getValues()) {
 			JsonObject valueObject = new JsonObject();
