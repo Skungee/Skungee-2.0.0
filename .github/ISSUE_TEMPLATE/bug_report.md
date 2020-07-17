@@ -26,5 +26,5 @@ assignees: ''
 
 ## Specifications
 Skungee Version:
-Platform and Version:
+Proxy Platform and Version:
 System/Panel (if applicable):
