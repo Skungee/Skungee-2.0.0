@@ -11,3 +11,9 @@ assignees: ''
 
 
 ## What you've tried so far
+
+
+## Specifications
+Skungee Version: 
+Proxy Platform and Version: 
+System/Panel (if applicable):
