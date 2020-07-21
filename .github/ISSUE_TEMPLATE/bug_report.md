@@ -25,6 +25,6 @@ assignees: ''
 3.
 
 ## Specifications
-Skungee Version:
-Proxy Platform and Version:
+Skungee Version: 
+Proxy Platform and Version: 
 System/Panel (if applicable):
