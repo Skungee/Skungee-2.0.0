@@ -3,6 +3,7 @@ package com.skungee.proxy;
 import java.util.Optional;
 import java.util.Set;
 
+import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Platform;
@@ -26,5 +27,7 @@ public interface ProxyPlatform extends Platform {
 	public VariableManager getVariableManager();
 
 	public Set<SkungeeServer> getServers();
+
+	public JapsonServer getJapsonServer();
 
 }

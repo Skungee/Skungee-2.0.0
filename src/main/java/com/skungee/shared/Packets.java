@@ -7,16 +7,17 @@ public enum Packets {
 	 * Reserved for API requests.
 	 */
 	API(0x01),
-	PLAYERS(0x02),
-	SERVERS(0x03),
-	CONNECT(0x04),
-	MESSAGE(0x05),
-	VARIABLES(0x06),
+	SIGNAL(0x02),
+	PLAYERS(0x03),
+	SERVERS(0x04),
+	CONNECT(0x05),
+	MESSAGE(0x06),
+	VARIABLES(0x07),
 	/**
 	 *  SERVER_DATA is for data exclusive to Spigot, like whitelisted players, max players, etc.
 	 *  This sends that data in a packet to the proxy.
 	 */
-	SERVER_DATA(0x07);
+	SERVER_DATA(0x08);
 
 	private final int id;
 

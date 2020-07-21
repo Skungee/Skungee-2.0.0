@@ -12,21 +12,40 @@ public class ServerDataManager {
 
 	private final static Map<InetSocketAddress, ServerData> map = new HashMap<>();
 
-	public static ServerData get(InetSocketAddress address) {
-		return Optional.ofNullable(map.get(address)).orElseGet(() -> {
-			ServerData data = new ServerData();
-			map.put(address, data);
-			return data;
-		});
+	/**
+	 * Grab a ServerData from the actual defined address in the config.yml of a sevrer.
+	 * 
+	 * @param address The server of the server to get or make.
+	 * @return The ServerData found or generated.
+	 */
+	public static Optional<ServerData> get(InetSocketAddress address) {
+		return Optional.ofNullable(map.get(address));
+	}
+
+	public static void set(InetSocketAddress address, ServerData data) {
+		map.put(address, data);
 	}
 
 	public static class ServerData {
 
+		private final InetSocketAddress japsonAddress, serverAddress;
 		private Set<UUID> whitelisted = new HashSet<>();
 		private String motd, version;
+		private Integer receiverPort;
 		private int limit;
 
-		public ServerData() {}
+		public ServerData(InetSocketAddress serverAddress, InetSocketAddress japsonAddress) {
+			this.serverAddress = serverAddress;
+			this.japsonAddress = japsonAddress;
+		}
+
+		public InetSocketAddress getAddress() {
+			return serverAddress;
+		}
+
+		public InetSocketAddress getJapsonAddress() {
+			return japsonAddress;
+		}
 
 		public String getMotd() {
 			return motd;
@@ -40,8 +59,20 @@ public class ServerDataManager {
 			return whitelisted;
 		}
 
+		public void setReceiverPort(int receiverPort) {
+			this.receiverPort = receiverPort;
+		}
+
 		public void setMotd(String motd) {
 			this.motd = motd;
+		}
+
+		public boolean hasReceiver() {
+			return receiverPort != null;
+		}
+
+		public int getReceiverPort() {
+			return receiverPort;
 		}
 
 		public String getVersion() {

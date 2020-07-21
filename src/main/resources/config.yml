@@ -22,3 +22,21 @@ protocol:
     # If the protocol is sending larger amounts of data (You have a large amount of players, and/or servers)
     # or you're recieving an EOFException. You may want to or be instructed to increase this value.
     buffer-size: 1024
+
+# Reciever is what allows the Proxy Skungee to communicate to the Spigot Skungee.
+# The Proxy Skungee can send other events and features from other Spigot servers or the Proxy iteself.
+receiver:
+    # If this is disabled, some syntax may not work.
+    enabled: true
+    # Define the ports to run on.
+    ports:
+        # Automatic will find any open ports and bind to it.
+        # When Automatic is enabled, the Spigot Skungee will tell
+        # the Proxy Skungee which port it found.
+        automatic: true
+        # The range of open ports to scan for.
+        automatic-range:
+            start: 1000
+            end: 30000
+        # If automatic is false, you can define the port to bind to.
+        port: 2000

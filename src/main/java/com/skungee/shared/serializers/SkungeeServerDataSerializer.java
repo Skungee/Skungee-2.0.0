@@ -1,6 +1,7 @@
 package com.skungee.shared.serializers;
 
 import java.lang.reflect.Type;
+import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,13 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 			throw new JsonParseException("A ServerData json element did not contain the property 'version'");
 		if (!object.has("whitelisted"))
 			throw new JsonParseException("A ServerData json element did not contain the property 'whitelisted'");
-		ServerData data = new ServerData();
+		if (!object.has("japson-address"))
+			throw new JsonParseException("A ServerData json element did not contain the property 'japson-address'");
+		if (!object.has("japson-port"))
+			throw new JsonParseException("A ServerData json element did not contain the property 'japson-port'");
+		InetSocketAddress serverAddress = new InetSocketAddress(object.get("address").getAsString(), object.get("port").getAsInt());
+		InetSocketAddress japsonAddress = new InetSocketAddress(object.get("japson-address").getAsString(), object.get("japson-port").getAsInt());
+		ServerData data = new ServerData(serverAddress, japsonAddress);
 		JsonElement limitElement = object.get("limit");
 		if (limitElement != null && !limitElement.isJsonNull())
 			data.setMaxPlayerLimit(limitElement.getAsInt());
@@ -42,6 +49,8 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 				.map(string -> UUID.fromString(string))
 				.filter(uuid -> uuid != null)
 				.collect(Collectors.toSet()));
+		if (object.has("receiver-port"))
+			data.setReceiverPort(object.get("receiver-port").getAsInt());
 		return data;
 	}
 
@@ -51,9 +60,15 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 		object.addProperty("limit", data.getMaxPlayerLimit());
 		object.addProperty("version", data.getVersion());
 		object.addProperty("motd", data.getMotd());
+		object.addProperty("address", data.getAddress().getHostName());
+		object.addProperty("port", data.getAddress().getPort());
 		JsonArray whitelisted = new JsonArray();
 		data.getWhitelisted().forEach(uuid -> whitelisted.add(uuid + ""));
 		object.add("whitelisted", whitelisted);
+		object.addProperty("japson-address", data.getJapsonAddress().getHostName());
+		object.addProperty("japson-port", data.getJapsonAddress().getPort());
+		if (data.hasReceiver())
+			object.addProperty("receiver-port", data.getReceiverPort());
 		return object;
 	}
 

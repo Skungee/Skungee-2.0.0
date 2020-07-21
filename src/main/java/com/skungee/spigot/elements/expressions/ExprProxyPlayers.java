@@ -42,6 +42,7 @@ public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 		try {
 			return packet.send().stream().toArray(SkungeePlayer[]::new);
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			Skript.info(e.getMessage() + " (proxied players)");
 			return null;
 		}
 	}

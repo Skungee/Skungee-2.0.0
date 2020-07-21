@@ -70,11 +70,11 @@ dependencies {
 	shadow (group: 'org.reflections', name: 'reflections', version: '0.9.12')
 
 	// Japson
-	shadow (group: 'com.sitrica', name: 'japson', version: '1.1.0')
+	shadow (group: 'com.sitrica', name: 'japson', version: '1.1.1')
 
 	testRuntimeOnly (group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0')
 	testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0')
-	testImplementation (group: 'com.sitrica', name: 'japson-beta', version: '1.0.8.2-SNAPSHOT')
+	testImplementation (group: 'com.sitrica', name: 'japson-beta', version: '1.1.2-SNAPSHOT')
 	testImplementation (group: 'org.reflections', name: 'reflections', version: '0.9.12')
 
 	shadow (group: 'org.json', name: 'json', version: '20200518')

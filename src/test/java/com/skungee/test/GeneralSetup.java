@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -23,10 +25,16 @@ import com.skungee.shared.Packets;
 public class GeneralSetup {
 
 	@Test
-	public void start() throws UnknownHostException, SocketException, TimeoutException, InterruptedException, ExecutionException {
+	public void start() throws UnknownHostException, SocketException, TimeoutException, InterruptedException, ExecutionException, NoSuchAlgorithmException {
 		JapsonClient client = new JapsonClient(1337);
+		client.makeSureConnectionValid();
+		MessageDigest sha256 = MessageDigest.getInstance("SHA-256");        
+	    byte[] passwordBytes = "test".getBytes();
+	    byte[] passwordHash = sha256.digest(passwordBytes);
+		client.setPassword(new String(passwordHash));
 		client.enableDebug();
 		JapsonServer server = new JapsonServer(1337);
+		server.setPassword(new String(passwordHash));
 		server.enableDebug();
 		server.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.bungeecord.handlers")
 				.getSubTypesOf(Handler.class).stream().map(clazz -> {

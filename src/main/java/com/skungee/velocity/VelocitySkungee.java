@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -26,6 +27,7 @@ import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
+import com.skungee.proxy.ServerDataManager.ServerData;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
@@ -112,6 +114,11 @@ public class VelocitySkungee implements ProxyPlatform {
 		}
 	}
 
+	@Override
+	public JapsonServer getJapsonServer() {
+		return japson;
+	}
+
 	public ProxyServer getProxy() {
 		return proxy;
 	}
@@ -130,25 +137,32 @@ public class VelocitySkungee implements ProxyPlatform {
 
 	@Override
 	public Optional<SkungeeServer> getServer(String name) {
-		Optional<ServerInfo> optional = proxy.getAllServers().stream()
+		Optional<ServerInfo> info = proxy.getAllServers().stream()
 				.filter(server -> server.getServerInfo().getName().equals(name))
 				.map(server -> server.getServerInfo())
 				.findFirst();
-		if (!optional.isPresent())
+		if (!info.isPresent())
 			return Optional.empty();
-		ServerInfo info = optional.get();
-		boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
-		return Optional.of(new SkungeeServer(info.getName(), online, ServerDataManager.get(info.getAddress())));
+		return getServer(info.get());
+	}
+
+	public Optional<SkungeeServer> getServer(ServerInfo info) {
+		Optional<ServerData> dataOptional = ServerDataManager.get(info.getAddress());
+		if (!dataOptional.isPresent())
+			return Optional.empty();
+		ServerData data = dataOptional.get();
+		InetSocketAddress japsonAddress = data.getJapsonAddress();
+		boolean online = japson.getConnections().getConnection(japsonAddress.getAddress(), japsonAddress.getPort()).isPresent();
+		return Optional.of(new SkungeeServer(info.getName(), online, data));
 	}
 
 	@Override
 	public Set<SkungeeServer> getServers() {
 		return proxy.getAllServers().stream()
-				.map(server -> {
-					ServerInfo info = server.getServerInfo();
-					boolean online = japson.getConnections().getConnection(info.getAddress().getAddress(), info.getAddress().getPort()).isPresent();
-					return new SkungeeServer(info.getName(), online, ServerDataManager.get(info.getAddress()));
-				})
+				.map(server -> server.getServerInfo())
+				.map(info -> getServer(info))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.collect(Collectors.toSet());
 	}
 
