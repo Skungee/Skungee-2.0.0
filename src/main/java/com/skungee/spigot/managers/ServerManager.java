@@ -52,7 +52,7 @@ public class ServerManager {
 								return Optional.empty();
 							return Optional.of(server);
 						} catch (TimeoutException | InterruptedException | ExecutionException e) {
-							return null;
+							return Optional.empty();
 						}
 					}
 			});
