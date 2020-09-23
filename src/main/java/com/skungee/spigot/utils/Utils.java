@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
 import com.skungee.shared.Skungee;
@@ -76,6 +77,22 @@ public class Utils {
 			in.close();
 			out.close();
 		}
+	}
+
+	public static boolean isPortTaken(int port) {
+		DatagramSocket socket = null;
+		try {
+			socket = new DatagramSocket(port);
+			socket.setReuseAddress(true);
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (socket != null) {
+				socket.close();
+			}
+		}
+		return true;
 	}
 
 	public static int findPort(int start, int max) {

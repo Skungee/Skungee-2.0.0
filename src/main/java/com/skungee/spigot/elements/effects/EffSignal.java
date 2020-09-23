@@ -1,5 +1,8 @@
 package com.skungee.spigot.elements.effects;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -36,23 +39,27 @@ public class EffSignal extends Effect {
 
 	@Override
 	protected void execute(Event event) {
-		SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.SIGNAL.getPacketId()) {
-			@Override
-			public JsonObject toJson() {
-				JsonObject object = new JsonObject();
-				if (servers != null) {
-					JsonArray serversArray = new JsonArray();
-					for (SkungeeServer server : servers.getArray(event))
-						serversArray.add(server.getName());
-					object.add("servers", serversArray);
+		try {
+			SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.SIGNAL.getPacketId()) {
+				@Override
+				public JsonObject toJson() {
+					JsonObject object = new JsonObject();
+					if (servers != null) {
+						JsonArray serversArray = new JsonArray();
+						for (SkungeeServer server : servers.getArray(event))
+							serversArray.add(server.getName());
+						object.add("servers", serversArray);
+					}
+					JsonArray stringsArray = new JsonArray();
+					for (String string : strings.getArray(event))
+						stringsArray.add(string);
+					object.add("strings", stringsArray);
+					return object;
 				}
-				JsonArray stringsArray = new JsonArray();
-				for (String string : strings.getArray(event))
-					stringsArray.add(string);
-				object.add("strings", stringsArray);
-				return object;
-			}
-		});
+			});
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

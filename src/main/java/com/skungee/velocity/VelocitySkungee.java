@@ -24,6 +24,9 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.sitrica.japson.server.JapsonServer;
+import com.sitrica.japson.server.Listener;
+import com.sitrica.japson.server.Connections.JapsonConnection;
+import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
@@ -35,6 +38,7 @@ import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
@@ -86,11 +90,17 @@ public class VelocitySkungee implements ProxyPlatform {
 		logger.info("SimpleSkungee has been enabled!");
 	}
 
+	private final VelocitySkungee getSelf() {
+		return this;
+	}
+
 	@Subscribe
 	public void onProxyInitialization(ProxyInitializeEvent event) {
 		try {
 			japson = new JapsonServer(configuration.getBindAddress(), configuration.getPort());
-			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.velocity.handlers").getSubTypesOf(Handler.class).stream()
+			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.velocity.handlers")
+					.getSubTypesOf(Handler.class).stream()
+					.filter(clazz -> clazz != Executor.class)
 					.map(clazz -> {
 						try {
 							return clazz.getConstructor(ProxyServer.class).newInstance(proxy);
@@ -109,9 +119,46 @@ public class VelocitySkungee implements ProxyPlatform {
 					.map(server -> server.getServerInfo().getAddress().getAddress())
 					.collect(Collectors.toList()));
 			japson.setAllowedAddresses(address.stream().toArray(InetAddress[]::new));
+			japson.registerListener(new Listener() {
+				@Override
+				public void onAcquiredCommunication(JapsonConnection connection) {
+					getSelf().debugMessage("Connection acquired " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onDisconnect(JapsonConnection connection) {
+					getSelf().debugMessage("Connection disconnected " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onForget(JapsonConnection connection) {
+					getSelf().debugMessage("Connection forgotten " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onReacquiredCommunication(JapsonConnection connection) {
+					getSelf().debugMessage("Connection reestablished " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onShutdown() {}
+
+				@Override
+				public void onUnresponsive(JapsonConnection connection) {
+					getSelf().debugMessage("Connection unresponsive " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onHeartbeat(JapsonConnection connection) {}
+			});
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Subscribe
+	public void onProxyInitialization(ProxyShutdownEvent event) {
+		japson.shutdown();
 	}
 
 	@Override

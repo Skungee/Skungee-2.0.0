@@ -1,5 +1,8 @@
 package com.skungee.spigot.elements.effects;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -36,20 +39,25 @@ public class EffConnect extends Effect {
 
 	@Override
 	protected void execute(Event event) {
-		SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.CONNECT.getPacketId()) {
-			@Override
-			public JsonObject toJson() {
-				JsonObject object = new JsonObject();
-				JsonArray playersArray = new JsonArray();
-				for (SkungeePlayer player : players.getArray(event))
-					playersArray.add(player.getUniqueId() + "");
-				object.add("players", playersArray);
-				SkungeeServer found = server.getSingle(event);
-				if (found != null)
-					object.addProperty("server", found.getName());
-				return object;
-			}
-		});
+		try {
+			SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.CONNECT.getPacketId()) {
+				@Override
+				public JsonObject toJson() {
+					JsonObject object = new JsonObject();
+					JsonArray playersArray = new JsonArray();
+					for (SkungeePlayer player : players.getArray(event))
+						playersArray.add(player.getUniqueId() + "");
+					object.add("players", playersArray);
+					SkungeeServer found = server.getSingle(event);
+					if (found != null)
+						object.addProperty("server", found.getName());
+					return object;
+				}
+			});
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

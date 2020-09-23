@@ -59,6 +59,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 				japson.enableDebug();
 			japson.makeSureConnectionValid();
 			japson.setPacketBufferSize(configuration.getBufferSize());
+			japson.start();
 			consoleMessage("Started on " + InetAddress.getLocalHost().getHostAddress() + ":" + configuration.getPort());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -85,7 +86,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 			}
 		}
 		metrics = new Metrics(this);
-		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new ServerDataTask(this, japson), 0, 5 * (60 * 20)); // 5 minutes.
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new ServerDataTask(this, japson), 0, 60 * 20); // 1 minute.
 		if (Bukkit.getPluginManager().isPluginEnabled("Skript")) {
 			try {
 				addon = Skript.registerAddon(this)
@@ -105,6 +106,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 
 	public void onDisable() {
 		Bukkit.getScheduler().cancelTasks(this);
+		japson.shutdown();
 	}
 
 	/**

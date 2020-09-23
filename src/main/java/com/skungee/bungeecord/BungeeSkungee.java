@@ -18,7 +18,10 @@ import java.util.stream.Collectors;
 import org.reflections.Reflections;
 
 import com.google.common.collect.Lists;
+import com.sitrica.japson.server.Connections.JapsonConnection;
 import com.sitrica.japson.server.JapsonServer;
+import com.sitrica.japson.server.Listener;
+import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
@@ -28,7 +31,6 @@ import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -70,7 +72,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		try {
 			japson = new JapsonServer(configuration.getBindAddress(), configuration.getPort());
 			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.bungeecord.handlers")
-					.getSubTypesOf(Handler.class).stream().map(clazz -> {
+					.getSubTypesOf(Handler.class).stream().filter(clazz -> clazz != Executor.class).map(clazz -> {
 						try {
 							return clazz.newInstance();
 						} catch (InstantiationException | IllegalAccessException e) {
@@ -85,6 +87,38 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			address.addAll(getProxy().getServers().values().stream().map(server -> server.getAddress().getAddress())
 					.collect(Collectors.toList()));
 			japson.setAllowedAddresses(address.stream().toArray(InetAddress[]::new));
+			japson.registerListener(new Listener() {
+				@Override
+				public void onAcquiredCommunication(JapsonConnection connection) {
+					instance.debugMessage("Connection acquired " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onDisconnect(JapsonConnection connection) {
+					instance.debugMessage("Connection disconnected " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onForget(JapsonConnection connection) {
+					instance.debugMessage("Connection forgotten " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onReacquiredCommunication(JapsonConnection connection) {
+					instance.debugMessage("Connection reestablished " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onShutdown() {}
+
+				@Override
+				public void onUnresponsive(JapsonConnection connection) {
+					instance.debugMessage("Connection unresponsive " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+				}
+
+				@Override
+				public void onHeartbeat(JapsonConnection connection) {}
+			});
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
@@ -95,6 +129,11 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		}
 		variableManager = new VariableManager(this);
 		consoleMessage("Started on " + japson.getAddress().getHostAddress() + ":" + configuration.getPort());
+	}
+
+	@Override
+	public void onDisable() {
+		japson.shutdown();
 	}
 
 	public static BungeeSkungee getInstance() {

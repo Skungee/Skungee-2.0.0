@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
 
@@ -21,11 +22,14 @@ import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
 import com.sitrica.japson.shared.ReturnablePacket;
 import com.skungee.shared.Packets;
+import com.skungee.spigot.utils.Utils;
 
 public class GeneralSetup {
 
+	@Order(1)
 	@Test
 	public void start() throws UnknownHostException, SocketException, TimeoutException, InterruptedException, ExecutionException, NoSuchAlgorithmException {
+		assertTrue(!Utils.isPortTaken(1337));
 		JapsonClient client = new JapsonClient(1337);
 		client.makeSureConnectionValid();
 		MessageDigest sha256 = MessageDigest.getInstance("SHA-256");        
@@ -75,6 +79,8 @@ public class GeneralSetup {
 
 		});
 		assertEquals(returned, "Returning!");
+		assertTrue(Utils.isPortTaken(server.getPort()));
+		server.shutdown();
 	}
 
 }

@@ -50,21 +50,25 @@ public class EffMessage extends Effect {
 		}
 		if (receivers .isEmpty())
 			return;
-		SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.MESSAGE.getPacketId()) {
-			@Override
-			public JsonObject toJson() {
-				JsonObject object = new JsonObject();
-				JsonArray playersArray = new JsonArray();
-				for (SkungeePlayer player : receivers)
-					playersArray.add(player.getUniqueId() + "");
-				object.add("players", playersArray);
-				JsonArray stringsArray = new JsonArray();
-				for (String string : strings.getArray(event))
-					stringsArray.add(string);
-				object.add("strings", stringsArray);
-				return object;
-			}
-		});
+		try {
+			SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.MESSAGE.getPacketId()) {
+				@Override
+				public JsonObject toJson() {
+					JsonObject object = new JsonObject();
+					JsonArray playersArray = new JsonArray();
+					for (SkungeePlayer player : receivers)
+						playersArray.add(player.getUniqueId() + "");
+					object.add("players", playersArray);
+					JsonArray stringsArray = new JsonArray();
+					for (String string : strings.getArray(event))
+						stringsArray.add(string);
+					object.add("strings", stringsArray);
+					return object;
+				}
+			});
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

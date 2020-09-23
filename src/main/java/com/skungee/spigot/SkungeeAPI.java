@@ -107,8 +107,11 @@ public class SkungeeAPI {
 	 * Send a custom non-returning packet.
 	 * 
 	 * @param packet The Japson Packet to send.
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
+	 * @throws TimeoutException 
 	 */
-	public void sendJson(JsonObject json) {
+	public void sendJson(JsonObject json) throws InterruptedException, ExecutionException, TimeoutException {
 		Packet packet = new Packet(Packets.API.getPacketId()) {
 			@Override
 			public JsonObject toJson() {

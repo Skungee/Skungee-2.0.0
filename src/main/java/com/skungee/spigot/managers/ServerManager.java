@@ -24,7 +24,7 @@ public class ServerManager {
 
 	private static final SkungeeServerSerializer serializer = new SkungeeServerSerializer();
 	private static final LoadingCache<String, Optional<SkungeeServer>> cache = CacheBuilder.newBuilder()
-			.expireAfterAccess(5, TimeUnit.MINUTES)
+			.expireAfterAccess(10, TimeUnit.MINUTES)
 			.maximumSize(100)
 			.build(new CacheLoader<String, Optional<SkungeeServer>>() {
 					public Optional<SkungeeServer> load(String name) {
@@ -100,7 +100,7 @@ public class ServerManager {
 			servers.forEach(server -> cache.put(server.getName(), Optional.of(server)));
 			return servers;
 		} catch (TimeoutException | InterruptedException | ExecutionException e) {
-			e.printStackTrace();
+			SpigotSkungee.getInstance().debugMessage(e.getMessage());
 			return new ArrayList<>();
 		}
 	}

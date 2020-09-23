@@ -8,6 +8,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
+import com.skungee.spigot.SpigotSkungee;
 import com.skungee.spigot.packets.PlayersPacket;
 
 import ch.njol.skript.Skript;
@@ -42,7 +43,7 @@ public class ExprProxyPlayers extends SimpleExpression<SkungeePlayer> {
 		try {
 			return packet.send().stream().toArray(SkungeePlayer[]::new);
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			Skript.info(e.getMessage() + " (proxied players)");
+			SpigotSkungee.getInstance().debugMessage(e.getMessage() + " (proxied players)");
 			return null;
 		}
 	}

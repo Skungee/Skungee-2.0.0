@@ -3,6 +3,8 @@ package com.skungee.proxy.handlers;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Streams;
@@ -44,12 +46,16 @@ public class SignalHandler extends Handler {
 		JapsonServer japson = platform.getJapsonServer();
 		for (SkungeeServer server : servers) {
 			ServerData serverData = server.getServerData();
-			japson.sendPacket(serverData.getJapsonAddress().getAddress(), serverData.getReceiverPort(), new Packet(Packets.SIGNAL.getPacketId()) {
-				@Override
-				public JsonObject toJson() {
-					return returning;
-				}
-			});
+			try {
+				japson.sendPacket(serverData.getJapsonAddress().getAddress(), serverData.getReceiverPort(), new Packet(Packets.SIGNAL.getPacketId()) {
+					@Override
+					public JsonObject toJson() {
+						return returning;
+					}
+				});
+			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
