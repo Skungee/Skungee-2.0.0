@@ -14,10 +14,15 @@ public enum Packets {
 	MESSAGE(0x06),
 	VARIABLES(0x07),
 	/**
-	 *  SERVER_DATA is for data exclusive to Spigot, like whitelisted players, max players, etc.
-	 *  This sends that data in a packet to the proxy.
+	 *  SERVER_DATA is exclusive for Spigot to Proxy.
+	 *  This packet sends server data like whitelisted players, max players, etc, in a packet to the proxy.
 	 */
-	SERVER_DATA(0x08);
+	SERVER_DATA(0x08),
+	/**
+	 *  GLOBAL_SCRIPTS is exclusive for Proxy to Spigot.
+	 *  This sends scripts that need to be updated and reloaded.
+	 */
+	GLOBAL_SCRIPTS(0x09);
 
 	private final int id;
 

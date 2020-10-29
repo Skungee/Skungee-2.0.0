@@ -6,8 +6,8 @@ import com.skungee.proxy.ProxyConfiguration;
 public class VelocityConfiguration implements ProxyConfiguration {
 
 	private final int PORT, INTERVAL, BUFFER_SIZE, VERSION;
+	private final String STORAGE_TYPE, ADDRESS, CHARSET;
 	private final boolean DEBUG, BACKUPS, MESSAGES;
-	private final String STORAGE_TYPE, ADDRESS;
 
 	public VelocityConfiguration(Toml configuration, long version) {
 
@@ -28,6 +28,9 @@ public class VelocityConfiguration implements ProxyConfiguration {
 
 		Toml protocol = configuration.getTable("protocol");
 		BUFFER_SIZE = protocol.getLong("buffer-size", 1024L).intValue();
+
+		Toml scripts = configuration.getTable("global-scripts");
+		CHARSET = scripts.getString("charset", "default");
 	}
 
 	@Override
@@ -48,6 +51,11 @@ public class VelocityConfiguration implements ProxyConfiguration {
 	@Override
 	public int getConfigurationVersion() {
 		return VERSION;
+	}
+
+	@Override
+	public String getScriptsCharset() {
+		return CHARSET;
 	}
 
 	@Override

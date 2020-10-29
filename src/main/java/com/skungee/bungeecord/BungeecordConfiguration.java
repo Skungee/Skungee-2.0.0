@@ -7,14 +7,15 @@ import net.md_5.bungee.config.Configuration;
 public class BungeecordConfiguration implements ProxyConfiguration {
 
 	private final int PORT, INTERVAL, BUFFER_SIZE, VERSION;
+	private final String STORAGE_TYPE, ADDRESS, CHARSET;
 	private final boolean DEBUG, BACKUPS, MESSAGES;
-	private final String STORAGE_TYPE, ADDRESS;
 
 	public BungeecordConfiguration(Configuration configuration, int version) {
 		MESSAGES = configuration.getBoolean("network-variables.backups.console-messages", true);
 		INTERVAL = configuration.getInt("network-variables.backups.interval-minutes", 120);
 		BACKUPS = configuration.getBoolean("network-variables.backups.enabled", true);
 		STORAGE_TYPE = configuration.getString("network-variables.type", "CSV");
+		CHARSET = configuration.getString("global-scripts.charset", "default");
 		BUFFER_SIZE = configuration.getInt("protocol.buffer-size", 1024);
 		VERSION = configuration.getInt("configuration-version", version);
 		ADDRESS = configuration.getString("bind-address", "127.0.0.1");
@@ -45,6 +46,11 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 	@Override
 	public boolean isBackupsEnabled() {
 		return BACKUPS;
+	}
+
+	@Override
+	public String getScriptsCharset() {
+		return CHARSET;
 	}
 
 	@Override

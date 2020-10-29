@@ -23,9 +23,9 @@ import org.slf4j.Logger;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
+import com.sitrica.japson.server.Connections.JapsonConnection;
 import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.server.Listener;
-import com.sitrica.japson.server.Connections.JapsonConnection;
 import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
@@ -54,9 +54,9 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 public class VelocitySkungee implements ProxyPlatform {
 
 	private final VelocityConfiguration configuration;
+	private final File dataFolder, SCRIPTS_FOLDER;
 	private final VariableManager variableManager;
 	private final ProxyServer proxy;
-	private final File dataFolder;
 	private final Logger logger;
 	private JapsonServer japson;
 
@@ -65,10 +65,12 @@ public class VelocitySkungee implements ProxyPlatform {
 		this.proxy = proxy;
 		this.logger = logger;
 		dataFolder = path.toFile();
+		SCRIPTS_FOLDER = new File(dataFolder, File.separator + "scripts");
+		if (!SCRIPTS_FOLDER.exists())
+			SCRIPTS_FOLDER.mkdir();
 		File file = new File(dataFolder, "config.toml");
 		if (!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
-
 		if (!file.exists()) {
 			try (InputStream input = getClass().getResourceAsStream("/" + file.getName())) {
 				if (input != null) {
@@ -183,6 +185,17 @@ public class VelocitySkungee implements ProxyPlatform {
 	}
 
 	@Override
+	public Optional<SkungeeServer> getServer(InetSocketAddress address) {
+		Optional<ServerInfo> info = proxy.getAllServers().stream()
+				.filter(server -> server.getServerInfo().getAddress().equals(address))
+				.map(server -> server.getServerInfo())
+				.findFirst();
+		if (!info.isPresent())
+			return Optional.empty();
+		return getServer(info.get());
+	}
+
+	@Override
 	public Optional<SkungeeServer> getServer(String name) {
 		Optional<ServerInfo> info = proxy.getAllServers().stream()
 				.filter(server -> server.getServerInfo().getName().equals(name))
@@ -273,6 +286,11 @@ public class VelocitySkungee implements ProxyPlatform {
 	@Override
 	public VariableManager getVariableManager() {
 		return variableManager;
+	}
+
+	@Override
+	public File getScriptsDirectory() {
+		return SCRIPTS_FOLDER;
 	}
 
 	@Override

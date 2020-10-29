@@ -1,5 +1,7 @@
 package com.skungee.proxy;
 
+import java.io.File;
+import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,6 +21,8 @@ public interface ProxyPlatform extends Platform {
 	 */
 	public void setApiHandler(Handler handler) throws IllegalAccessException;
 
+	public Optional<SkungeeServer> getServer(InetSocketAddress address);
+
 	public Optional<SkungeeServer> getServer(String name);
 
 	@Override
@@ -29,5 +33,7 @@ public interface ProxyPlatform extends Platform {
 	public Set<SkungeeServer> getServers();
 
 	public JapsonServer getJapsonServer();
+
+	public File getScriptsDirectory();
 
 }

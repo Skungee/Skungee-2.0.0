@@ -46,7 +46,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 		API = new SkungeeAPI(this);
 		File configFile = new File(getDataFolder(), "config.yml");
 		//If newer version was found, update configuration.
-		int version = 1;
+		int version = 2;
 		if (version != getConfig().getInt("configuration-version", version)) {
 			if (configFile.exists())
 				configFile.delete();

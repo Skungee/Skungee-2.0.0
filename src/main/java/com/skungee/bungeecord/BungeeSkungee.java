@@ -46,6 +46,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	private VariableManager variableManager;
 	private static BungeeSkungee instance;
 	private JapsonServer japson;
+	private File SCRIPTS_FOLDER;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -53,6 +54,9 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		instance = this;
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
+		SCRIPTS_FOLDER = new File(getDataFolder(), File.separator + "scripts");
+		if (!SCRIPTS_FOLDER.exists())
+			SCRIPTS_FOLDER.mkdir();
 		File file = new File(getDataFolder(), "configuration.yml");
 		try (InputStream input = getResourceAsStream("configuration.yml")) {
 			if (!file.exists())
@@ -159,6 +163,16 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	}
 
 	@Override
+	public Optional<SkungeeServer> getServer(InetSocketAddress address) {
+		Optional<ServerInfo> info = getProxy().getServers().values().stream()
+				.filter(server -> server.getSocketAddress().equals(address))
+				.findFirst();
+		if (!info.isPresent())
+			return Optional.empty();
+		return getServer(info.get());
+	}
+
+	@Override
 	public Optional<SkungeeServer> getServer(String name) {
 		Optional<ServerInfo> info = ProxyServer.getInstance().getServers().entrySet().stream()
 				.filter(entry -> entry.getKey().equals(name))
@@ -243,6 +257,11 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	@Override
 	public VariableManager getVariableManager() {
 		return variableManager;
+	}
+
+	@Override
+	public File getScriptsDirectory() {
+		return SCRIPTS_FOLDER;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.skungee.proxy.handlers;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -11,7 +12,7 @@ import com.google.common.collect.Streams;
 import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.server.JapsonServer;
-import com.sitrica.japson.shared.Handler;
+import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Packet;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager.ServerData;
@@ -19,16 +20,16 @@ import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeeServer;
 
-public class SignalHandler extends Handler {
+public class SignalHandler extends Executor {
 
 	public SignalHandler() {
 		super(Packets.SIGNAL.getPacketId());
 	}
 
 	@Override
-	public JsonObject handle(InetAddress address, int port, JsonObject object) {
+	public void execute(InetAddress address, int port, JsonObject object) {
 		if (!object.has("strings"))
-			return null;
+			return;
 		ProxyPlatform platform = (ProxyPlatform) Skungee.getPlatform();
 		Set<SkungeeServer> servers = platform.getServers().stream()
 				.filter(server -> server.getServerData().hasReceiver())
@@ -47,7 +48,8 @@ public class SignalHandler extends Handler {
 		for (SkungeeServer server : servers) {
 			ServerData serverData = server.getServerData();
 			try {
-				japson.sendPacket(serverData.getJapsonAddress().getAddress(), serverData.getReceiverPort(), new Packet(Packets.SIGNAL.getPacketId()) {
+				InetSocketAddress japsonAddress = serverData.getJapsonAddress();
+				japson.sendPacket(japsonAddress.getAddress(), japsonAddress.getPort(), new Packet(Packets.SIGNAL.getPacketId()) {
 					@Override
 					public JsonObject toJson() {
 						return returning;
@@ -57,7 +59,6 @@ public class SignalHandler extends Handler {
 				e.printStackTrace();
 			}
 		}
-		return null;
 	}
 
 }

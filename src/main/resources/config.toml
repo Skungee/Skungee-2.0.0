@@ -36,3 +36,9 @@ enabled = true
 interval-minutes = 120
 # If a message should be broadcasted to the console stating the variables were backed up.
 console-messages = true
+
+[global-scripts]
+
+# The charset to send the scripts to the Spigot Skungee as.
+# See https://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html
+charset = "default"

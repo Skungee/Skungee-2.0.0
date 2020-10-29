@@ -10,7 +10,6 @@ port: 8000
 # The address to bind to.
 bind-address: "127.0.0.1"
 
-# Settings relating to the protocol.
 protocol:
     # The packet buffer size in bytes.
     # Default size is the UDP standard 1024
@@ -19,7 +18,6 @@ protocol:
     # or you're recieving an EOFException. You may want to or be instructed to increase this value.
     buffer-size: 1024
 
-# All configurations relating to network-variables
 network-variables:
     # The storage type to use.
     # The SkungeeAPI allows for registering custom storage systems.
@@ -31,3 +29,8 @@ network-variables:
         interval-minutes: 120
         # If a message should be broadcasted to the console stating the variables were backed up.
         console-messages: true
+
+global-scripts:
+    # The charset to send the scripts to the Spigot Skungee as.
+    # See https://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html
+    charset: "default"

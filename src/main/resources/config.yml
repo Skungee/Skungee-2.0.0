@@ -1,5 +1,5 @@
 # The version is to help determine which version this config is. Please don't modify this value.
-configuration-version: 1
+configuration-version: 2
 
 # Print additional information in the console. Useful for figuring out errors and issues.
 debug: false
