@@ -149,8 +149,8 @@ public class ServerDataManager {
 			return scripts;
 		}
 
-		public void addScript(String name, List<String> scripts) {
-			this.scripts.putAll(name, scripts);
+		public void addScript(String name, List<String> lines) {
+			this.scripts.putAll(name, lines);
 		}
 
 		public InetSocketAddress getAddress() {

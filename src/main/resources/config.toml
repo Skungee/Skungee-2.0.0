@@ -11,6 +11,10 @@ debug = false
 bind-address = "127.0.0.1"
 # This value should be copied in every other SimpleSkungee spigot server configuration.
 port = 8000
+ignored-debug = [
+  "HEARTBEAT",
+  "SERVER_DATA"
+]
 
 # Configurations relating to the Japson protocol.
 [protocol]

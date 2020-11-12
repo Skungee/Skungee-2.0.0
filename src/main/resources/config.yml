@@ -3,6 +3,11 @@ configuration-version: 2
 
 # Print additional information in the console. Useful for figuring out errors and issues.
 debug: false
+# Ignored packets get removed from the debug log.
+# Can be an integer for packet ID or name of packet.
+ignored-packets:
+    - "HEARTBEAT"
+    - "SERVER_DATA"
 
 # This value should match the same port defined in the SimpleSkungee configuration on the Proxy.
 port: 8000
@@ -40,3 +45,8 @@ receiver:
             end: 30000
         # If automatic is false, you can define the port to bind to.
         port: 2000
+
+global-scripts:
+    # The charset to send the scripts to the Spigot Skungee as.
+    # See https://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html
+    charset: "default"

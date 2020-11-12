@@ -31,6 +31,7 @@ import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
 import com.skungee.proxy.ServerDataManager.ServerData;
+import com.skungee.proxy.SkungeeAPI;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
@@ -57,6 +58,7 @@ public class VelocitySkungee implements ProxyPlatform {
 	private final File dataFolder, SCRIPTS_FOLDER;
 	private final VariableManager variableManager;
 	private final ProxyServer proxy;
+	private static SkungeeAPI API;
 	private final Logger logger;
 	private JapsonServer japson;
 
@@ -64,6 +66,7 @@ public class VelocitySkungee implements ProxyPlatform {
 	public VelocitySkungee(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
 		this.proxy = proxy;
 		this.logger = logger;
+		API = new SkungeeAPI(this);
 		dataFolder = path.toFile();
 		SCRIPTS_FOLDER = new File(dataFolder, File.separator + "scripts");
 		if (!SCRIPTS_FOLDER.exists())
@@ -113,8 +116,11 @@ public class VelocitySkungee implements ProxyPlatform {
 					})
 					.filter(handler -> handler != null)
 					.toArray(Handler[]::new));
-			if (configuration.isDebug())
+			if (configuration.isDebug()) {
 				japson.enableDebug();
+				if (configuration.getIgnoredDebugPackets().length != 0)
+					japson.addIgnoreDebugPackets(configuration.getIgnoredDebugPackets());
+			}
 			japson.setPacketBufferSize(configuration.getBufferSize());
 			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost(), InetAddress.getByName("127.0.0.1"));
 			address.addAll(proxy.getAllServers().stream()
@@ -124,22 +130,22 @@ public class VelocitySkungee implements ProxyPlatform {
 			japson.registerListener(new Listener() {
 				@Override
 				public void onAcquiredCommunication(JapsonConnection connection) {
-					getSelf().debugMessage("Connection acquired " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					getSelf().debugMessage("Connection acquired " + connection.getAddress().getHostAddress());
 				}
 
 				@Override
 				public void onDisconnect(JapsonConnection connection) {
-					getSelf().debugMessage("Connection disconnected " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					getSelf().debugMessage("Connection disconnected " + connection.getAddress().getHostAddress());
 				}
 
 				@Override
 				public void onForget(JapsonConnection connection) {
-					getSelf().debugMessage("Connection forgotten " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					getSelf().debugMessage("Connection forgotten " + connection.getAddress().getHostAddress());
 				}
 
 				@Override
 				public void onReacquiredCommunication(JapsonConnection connection) {
-					getSelf().debugMessage("Connection reestablished " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					getSelf().debugMessage("Connection reestablished " + connection.getAddress().getHostAddress());
 				}
 
 				@Override
@@ -147,7 +153,7 @@ public class VelocitySkungee implements ProxyPlatform {
 
 				@Override
 				public void onUnresponsive(JapsonConnection connection) {
-					getSelf().debugMessage("Connection unresponsive " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					getSelf().debugMessage("Connection unresponsive " + connection.getAddress().getHostAddress());
 				}
 
 				@Override
@@ -166,6 +172,10 @@ public class VelocitySkungee implements ProxyPlatform {
 	@Override
 	public JapsonServer getJapsonServer() {
 		return japson;
+	}
+
+	public static SkungeeAPI getAPI() {
+		return API;
 	}
 
 	public ProxyServer getProxy() {

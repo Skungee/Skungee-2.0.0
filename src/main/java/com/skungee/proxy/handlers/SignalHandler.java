@@ -1,7 +1,6 @@
 package com.skungee.proxy.handlers;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -48,8 +47,7 @@ public class SignalHandler extends Executor {
 		for (SkungeeServer server : servers) {
 			ServerData serverData = server.getServerData();
 			try {
-				InetSocketAddress japsonAddress = serverData.getJapsonAddress();
-				japson.sendPacket(japsonAddress.getAddress(), japsonAddress.getPort(), new Packet(Packets.SIGNAL.getPacketId()) {
+				japson.sendPacket(serverData.getJapsonAddress(), new Packet(Packets.SIGNAL.getPacketId()) {
 					@Override
 					public JsonObject toJson() {
 						return returning;

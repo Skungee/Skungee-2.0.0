@@ -1,25 +1,50 @@
 package com.skungee.spigot;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.skungee.shared.Packets;
 import com.skungee.shared.PlatformConfiguration;
 
 public class SpigotConfiguration implements PlatformConfiguration {
 
+	private final Set<Packets> ignored = new HashSet<>();
 	private final int PORT, BUFFER_SIZE, VERSION;
 	private final ReceiverPorts recevierPorts;
 	private final boolean DEBUG, RECEIVER;
-	private final String ADDRESS;
+	private final String ADDRESS, CHARSET;
 
 	public SpigotConfiguration(FileConfiguration configuration, int version) {
+		ignored.addAll(configuration.getList("ignored-packets").stream().map(object -> {
+			if (object instanceof String) {
+				Packets found = Packets.valueOf((String) object);
+				if (found != null)
+					return found;
+			} else if (object instanceof Number) {
+				for (Packets packet : Packets.values()) {
+					if (packet.getPacketId() == ((Number)object).intValue())
+						return packet;
+				}
+			}
+			return null;
+		}).filter(packet -> packet != null).collect(Collectors.toSet()));
 		recevierPorts = new ReceiverPorts(configuration.getConfigurationSection("receiver.ports"));
+		CHARSET = configuration.getString("global-scripts.charset", "default");
 		VERSION = configuration.getInt("configuration-version", version);
 		BUFFER_SIZE = configuration.getInt("protocol.buffer-size", 1024);
 		ADDRESS = configuration.getString("bind-address", "127.0.0.1");
 		RECEIVER = configuration.getBoolean("receiver.enabled", true);
 		DEBUG = configuration.getBoolean("debug", false);
 		PORT = configuration.getInt("port", 8000);
+	}
+
+	@Override
+	public Integer[] getIgnoredDebugPackets() {
+		return ignored.stream().map(packet -> packet.getPacketId()).toArray(Integer[]::new);
 	}
 
 	public ReceiverPorts getReceiverPorts() {
@@ -29,6 +54,11 @@ public class SpigotConfiguration implements PlatformConfiguration {
 	@Override
 	public int getConfigurationVersion() {
 		return VERSION;
+	}
+
+	@Override
+	public String getScriptsCharset() {
+		return CHARSET;
 	}
 
 	@Override

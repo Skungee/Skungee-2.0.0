@@ -3,6 +3,11 @@ configuration-version: 1
 
 # Print additional information in the console. Useful for figuring out errors and issues.
 debug: false
+# Ignored packets get removed from the debug log.
+# Can be an integer for packet ID or name of packet.
+ignored-packets:
+    - "HEARTBEAT"
+    - "SERVER_DATA"
 
 # This value should be copied in every other SimpleSkungee spigot server configuration.
 port: 8000

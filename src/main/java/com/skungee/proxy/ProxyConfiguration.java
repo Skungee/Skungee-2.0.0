@@ -10,8 +10,6 @@ public interface ProxyConfiguration extends PlatformConfiguration {
 
 	public long getMinutesBackupInterval();
 
-	public String getScriptsCharset();
-
 	public boolean isBackupsEnabled();
 
 }

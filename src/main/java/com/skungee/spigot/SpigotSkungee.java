@@ -18,6 +18,7 @@ import org.reflections.Reflections;
 
 import com.sitrica.japson.client.JapsonClient;
 import com.sitrica.japson.server.JapsonServer;
+import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.shared.Platform;
 import com.skungee.shared.Skungee;
@@ -55,8 +56,11 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 		configuration = new SpigotConfiguration(getConfig(), version);
 		try {
 			japson = new JapsonClient(configuration.getBindAddress(), configuration.getPort());
-			if (configuration.isDebug())
+			if (configuration.isDebug()) {
 				japson.enableDebug();
+				if (configuration.getIgnoredDebugPackets().length != 0)
+					japson.addIgnoreDebugPackets(configuration.getIgnoredDebugPackets());
+			}
 			japson.makeSureConnectionValid();
 			japson.setPacketBufferSize(configuration.getBufferSize());
 			japson.start();
@@ -73,7 +77,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 					receiver.enableDebug();
 				receiver.setPacketBufferSize(configuration.getBufferSize());
 				receiver.registerHandlers(new Reflections("com.skungee.spigot.handlers")
-						.getSubTypesOf(Handler.class).stream().map(clazz -> {
+						.getSubTypesOf(Handler.class).stream().filter(clazz -> !clazz.equals(Executor.class)).map(clazz -> {
 							try {
 								return clazz.newInstance();
 							} catch (InstantiationException | IllegalAccessException e) {

@@ -2,6 +2,10 @@ package com.skungee.shared.serializers;
 
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,6 +55,18 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 				.collect(Collectors.toSet()));
 		if (object.has("receiver-port"))
 			data.setReceiverPort(object.get("receiver-port").getAsInt());
+
+		// Scripts
+		JsonArray scripts = object.get("scripts").getAsJsonArray();
+		scripts.forEach(element -> {
+			JsonObject script = element.getAsJsonObject();
+			if (!script.has("name") || !script.has("lines"))
+				return;
+			String name = script.get("name").getAsString();
+			List<String> lines = new ArrayList<>();
+			script.get("lines").getAsJsonArray().forEach(line -> lines.add(line.getAsString()));
+			data.addScript(name, lines);
+		});
 		return data;
 	}
 
@@ -69,6 +85,17 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 		object.addProperty("japson-port", data.getJapsonAddress().getPort());
 		if (data.hasReceiver())
 			object.addProperty("receiver-port", data.getReceiverPort());
+		JsonArray array = new JsonArray();
+		for (Entry<String, Collection<String>> entry : data.getScripts().asMap().entrySet()) {
+			JsonObject script = new JsonObject();
+			script.addProperty("name", entry.getKey());
+			JsonArray lines = new JsonArray();
+			for (String line : entry.getValue())
+				lines.add(line);
+			script.add("lines", lines);
+			array.add(script);
+		}
+		object.add("scripts", array);
 		return object;
 	}
 

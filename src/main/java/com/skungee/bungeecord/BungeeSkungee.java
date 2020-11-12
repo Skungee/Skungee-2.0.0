@@ -26,11 +26,13 @@ import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
 import com.skungee.proxy.ServerDataManager.ServerData;
+import com.skungee.proxy.SkungeeAPI;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -45,6 +47,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	private BungeecordConfiguration configuration;
 	private VariableManager variableManager;
 	private static BungeeSkungee instance;
+	private static SkungeeAPI API;
 	private JapsonServer japson;
 	private File SCRIPTS_FOLDER;
 
@@ -52,6 +55,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	@Override
 	public void onEnable() {
 		instance = this;
+		API = new SkungeeAPI(this);
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
 		SCRIPTS_FOLDER = new File(getDataFolder(), File.separator + "scripts");
@@ -84,8 +88,11 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 							return null;
 						}
 					}).filter(handler -> handler != null).toArray(Handler[]::new));
-			if (configuration.isDebug())
+			if (configuration.isDebug()) {
 				japson.enableDebug();
+				if (configuration.getIgnoredDebugPackets().length != 0)
+					japson.addIgnoreDebugPackets(configuration.getIgnoredDebugPackets());
+			}
 			japson.setPacketBufferSize(configuration.getBufferSize());
 			List<InetAddress> address = Lists.newArrayList(InetAddress.getLocalHost(), InetAddress.getByName("127.0.0.1"));
 			address.addAll(getProxy().getServers().values().stream().map(server -> server.getAddress().getAddress())
@@ -147,6 +154,10 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	@Override
 	public JapsonServer getJapsonServer() {
 		return japson;
+	}
+
+	public static SkungeeAPI getAPI() {
+		return API;
 	}
 
 	@Override
