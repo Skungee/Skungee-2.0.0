@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.sitrica.japson.gson.JsonObject;
+import com.sitrica.japson.shared.Handler;
 import com.sitrica.japson.shared.Packet;
 import com.sitrica.japson.shared.ReturnablePacket;
 import com.skungee.shared.Packets;
@@ -99,6 +100,10 @@ public class SkungeeAPI {
 			}
 		};
 		return platform.getJapsonServer().sendPacket(server.getServerData().getJapsonAddress(), packet);
+	}
+
+	public <H extends Handler> void registerHandler(@SuppressWarnings("unchecked") H... handlers) {
+		platform.getJapsonServer().registerHandlers(handlers);
 	}
 
 }
