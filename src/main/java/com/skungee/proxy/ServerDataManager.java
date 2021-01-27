@@ -108,11 +108,12 @@ public class ServerDataManager {
 		}
 		// Send the packet.
 		try {
-			platform.getJapsonServer().sendPacket(data.getJapsonAddress(), new Packet(Packets.GLOBAL_SCRIPTS.getPacketId()) {
+			Skungee.getPlatform().debugMessage("Send GlobalScript Packet to "+data.getJapsonAddress());
+			platform.getJapsonServer().sendPacket(new InetSocketAddress(data.getJapsonAddress().getAddress(), data.getReceiverPort()), new Packet(Packets.GLOBAL_SCRIPTS.getPacketId()) {
 				@Override
 				public JsonObject toJson() {
 					JsonObject object = new JsonObject();
-					JsonArray array = new JsonArray();
+					JsonArray scriptsArray = new JsonArray();
 					for (Entry<String, Collection<String>> entry : send.asMap().entrySet()) {
 						JsonObject script = new JsonObject();
 						script.addProperty("name", entry.getKey());
@@ -120,9 +121,9 @@ public class ServerDataManager {
 						for (String line : entry.getValue())
 							lines.add(line);
 						script.add("lines", lines);
-						array.add(lines);
+						scriptsArray.add(script);
 					}
-					object.add("scripts", array);
+					object.add("scripts", scriptsArray);
 					return object;
 				}
 			});

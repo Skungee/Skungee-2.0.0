@@ -31,6 +31,7 @@ public class ScriptsHandler extends Executor {
 
 	@Override
 	public void execute(InetAddress address, int port, JsonObject object) {
+		Skungee.getPlatform().debugMessage("Received Global Script Packet");
 		if (!object.has("scripts"))
 			return;
 		File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + File.separator + Skript.SCRIPTSFOLDER);
