@@ -46,7 +46,7 @@ public class ScriptsHandler extends Executor {
 			File file;
 			try {
 				file = File.createTempFile("Skungee", name);
-				PrintStream out = new PrintStream(new FileOutputStream(file));
+				PrintStream out = new PrintStream(new FileOutputStream(file), true, "UTF-8");
 				out.print(StringUtils.join(lines.toArray(new String[lines.size()]), '\n'));
 				out.close();
 				Optional<File> existing = Stream.of(scriptsFolder.listFiles(new FilenameFilter() {
