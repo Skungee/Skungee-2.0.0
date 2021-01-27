@@ -34,7 +34,7 @@ public class ScriptsHandler extends Executor {
 		Skungee.getPlatform().debugMessage("Received Global Script Packet");
 		if (!object.has("scripts"))
 			return;
-		File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + File.separator + Skript.SCRIPTSFOLDER);
+		File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + "/" + Skript.SCRIPTSFOLDER + "/Global");
 		JsonArray scripts = object.get("scripts").getAsJsonArray();
 		scripts.forEach(element -> {
 			JsonObject script = element.getAsJsonObject();

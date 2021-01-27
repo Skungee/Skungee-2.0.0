@@ -84,7 +84,8 @@ public class ServerDataTask implements Runnable {
 					object.add("operators", operators);
 					instance.getReceiver().ifPresent(receiver -> object.addProperty("receiver-port", receiver.getPort()));
 
-					File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + File.separator + Skript.SCRIPTSFOLDER);
+					File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + "/" + Skript.SCRIPTSFOLDER + "/Global");
+					if(!scriptsFolder.exists()) scriptsFolder.mkdir();
 					Multimap<String, String> map = getScripts(scriptsFolder);
 					JsonArray array = new JsonArray();
 					for (Entry<String, Collection<String>> entry : map.asMap().entrySet()) {
