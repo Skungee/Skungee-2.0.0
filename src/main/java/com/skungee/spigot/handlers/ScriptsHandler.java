@@ -49,20 +49,21 @@ public class ScriptsHandler extends Executor {
 				PrintStream out = new PrintStream(new FileOutputStream(file), true, "UTF-8");
 				out.print(StringUtils.join(lines.toArray(new String[lines.size()]), '\n'));
 				out.close();
-				Optional<File> existing = Stream.of(scriptsFolder.listFiles(new FilenameFilter() {
-					@Override
-					public boolean accept(File dir, String name) {
-						return name.toLowerCase().equals(name.toLowerCase());
-					}
-				})).findFirst();
-				if (!existing.isPresent()) {
-					file.delete();
-					return;
-				}
-				Files.deleteIfExists(existing.get().toPath());
+				// I don't care if you are there
+//				Optional<File> existing = Stream.of(scriptsFolder.listFiles(new FilenameFilter() {
+//					@Override
+//					public boolean accept(File dir, String name) {
+//						return name.toLowerCase().equals(name.toLowerCase());
+//					}
+//				})).findFirst();
+//				if (!existing.isPresent()) {
+//					file.delete();
+//					return;
+//				}
+//				Files.deleteIfExists(existing.get().toPath());
 				File newScript = new File(scriptsFolder + File.separator + name);
 				com.google.common.io.Files.move(file, newScript);
-				Bukkit.getScheduler().runTask(Skript.getInstance(),() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sk reload " + name));
+				Bukkit.getScheduler().runTask(Skript.getInstance(),() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sk reload Global/" + name));
 				file.delete();
 				Skungee.getPlatform().debugMessage("Reloaded Global Script " + name);
 			} catch (IOException e) {

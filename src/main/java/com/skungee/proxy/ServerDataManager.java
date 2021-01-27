@@ -83,29 +83,26 @@ public class ServerDataManager {
 		// Remove scripts that don't need updating.
 		Multimap<String, String> existing = HashMultimap.create();
 		existing.putAll(data.getScripts());
-		for (Entry<String, Collection<String>> existingEntry : existing.asMap().entrySet()) {
-			String current = "";
-			for (Entry<String, Collection<String>> entry : map.asMap().entrySet()) {
+		for (Entry<String, Collection<String>> entry : map.asMap().entrySet()) {
+			for (Entry<String, Collection<String>> existingEntry : existing.asMap().entrySet()) {
+				String current = "";
 				current = existingEntry.getKey();
 				if (current.equalsIgnoreCase(entry.getKey())) {
 					// If this script matches what is currently on the Spigot, then ignore this script.
 					if (existingEntry.getValue().equals(entry.getValue())) {
-						existing.removeAll(current);
+						map.removeAll(current);
 						continue;
 					}
 				}
 			}
 		}
-		// If this is empty, that means that all the scripts on the Spigot already match that of what's on the Proxy.
-		if (existing.isEmpty())
-			return;
 		// Setup the sending multimap for the correct scripts.
 		Multimap<String, String> send = HashMultimap.create();
 		for (Entry<String, String> entry : map.entries()) {
-			if (!existing.containsKey(entry.getKey()))
-				continue;
 			send.put(entry.getKey(), entry.getValue());
 		}
+		// Don't send when there's nothing to update
+		if(send.isEmpty()) return;
 		// Send the packet.
 		try {
 			Skungee.getPlatform().debugMessage("Send GlobalScript Packet to "+data.getJapsonAddress());
