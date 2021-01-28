@@ -77,13 +77,13 @@ public class ServerDataTask implements Runnable {
 					object.addProperty("motd", Bukkit.getMotd());
 					object.addProperty("port", Bukkit.getPort());
 					JsonArray whitelisted = new JsonArray();
-//					Bukkit.getWhitelistedPlayers().forEach(player -> whitelisted.add(player.getUniqueId() + ""));
+					Bukkit.getWhitelistedPlayers().forEach(player -> whitelisted.add(player.getUniqueId() + ""));
 					object.add("whitelisted", whitelisted);
 					JsonArray banned = new JsonArray();
-//					Bukkit.getBannedPlayers().forEach(player -> banned.add(player.getUniqueId() + ""));
+					Bukkit.getBannedPlayers().forEach(player -> banned.add(player.getUniqueId() + ""));
 					object.add("banned", banned);
 					JsonArray operators = new JsonArray();
-//					Bukkit.getOperators().forEach(player -> operators.add(player.getUniqueId() + ""));
+					Bukkit.getOperators().forEach(player -> operators.add(player.getUniqueId() + ""));
 					object.add("operators", operators);
 					instance.getReceiver().ifPresent(receiver -> object.addProperty("receiver-port", receiver.getPort()));
 
