@@ -4,3 +4,8 @@ version: @version@
 api-version: 1.13
 softdepend: [Skript]
 main: com.skungee.spigot.SpigotSkungee
+
+commands:
+  skungeesync:
+    aliases: [ssync]
+    permission: skungee.commands.sync

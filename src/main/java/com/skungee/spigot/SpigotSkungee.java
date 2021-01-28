@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import com.skungee.spigot.commands.SkungeeSync;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -105,6 +106,9 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+
+		this.getCommand("skungeesync").setExecutor(new SkungeeSync());
+
 		consoleMessage("has been enabled!");
 	}
 
