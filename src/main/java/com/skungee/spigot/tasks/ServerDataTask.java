@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import com.sitrica.japson.gson.Gson;
 import org.bukkit.Bukkit;
 
 import com.google.common.collect.HashMultimap;
@@ -34,8 +37,8 @@ public class ServerDataTask implements Runnable {
 		this.japson = japson;
 	}
 
-	private final Multimap<String, String> getScripts(File directory) {
-		Multimap<String, String> map = HashMultimap.create();
+	private final HashMap<String, String> getScripts(File directory) {
+		HashMap<String, String> map = new HashMap<String, String>();
 		if (directory == null)
 			directory = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + File.separator + Skript.SCRIPTSFOLDER);
 		Charset charset = Charset.forName(instance.getPlatformConfiguration().getScriptsCharset());
@@ -50,7 +53,7 @@ public class ServerDataTask implements Runnable {
 					map.putAll(getScripts(script));
 					return;
 				}
-				map.putAll(script.getName(), Files.readAllLines(script.toPath(), charset));
+				map.put(script.getName(), Base64.getEncoder().encodeToString(Files.readAllBytes(script.toPath())));
 			} catch (IOException e) {
 				instance.consoleMessage("Charset " + charset + " does not support some symbols in script " + script.getAbsolutePath());
 				e.printStackTrace();
@@ -74,30 +77,28 @@ public class ServerDataTask implements Runnable {
 					object.addProperty("motd", Bukkit.getMotd());
 					object.addProperty("port", Bukkit.getPort());
 					JsonArray whitelisted = new JsonArray();
-					Bukkit.getWhitelistedPlayers().forEach(player -> whitelisted.add(player.getUniqueId() + ""));
+//					Bukkit.getWhitelistedPlayers().forEach(player -> whitelisted.add(player.getUniqueId() + ""));
 					object.add("whitelisted", whitelisted);
 					JsonArray banned = new JsonArray();
-					Bukkit.getBannedPlayers().forEach(player -> banned.add(player.getUniqueId() + ""));
+//					Bukkit.getBannedPlayers().forEach(player -> banned.add(player.getUniqueId() + ""));
 					object.add("banned", banned);
 					JsonArray operators = new JsonArray();
-					Bukkit.getOperators().forEach(player -> operators.add(player.getUniqueId() + ""));
+//					Bukkit.getOperators().forEach(player -> operators.add(player.getUniqueId() + ""));
 					object.add("operators", operators);
 					instance.getReceiver().ifPresent(receiver -> object.addProperty("receiver-port", receiver.getPort()));
 
 					File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + "/" + Skript.SCRIPTSFOLDER + "/Global");
 					if(!scriptsFolder.exists()) scriptsFolder.mkdir();
-					Multimap<String, String> map = getScripts(scriptsFolder);
+					HashMap<String, String> map = getScripts(scriptsFolder);
 					JsonArray array = new JsonArray();
-					for (Entry<String, Collection<String>> entry : map.asMap().entrySet()) {
+					for (String key : map.keySet()) {
 						JsonObject script = new JsonObject();
-						script.addProperty("name", entry.getKey());
-						JsonArray lines = new JsonArray();
-						for (String line : entry.getValue())
-							lines.add(line);
-						script.add("lines", lines);
+						script.addProperty("name", key);
+						script.addProperty("lines", map.get(key));
 						array.add(script);
 					}
 					object.add("scripts", array);
+					Gson gson = new Gson();
 					return object;
 				}
 			});

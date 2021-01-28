@@ -63,8 +63,7 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 			if (!script.has("name") || !script.has("lines"))
 				return;
 			String name = script.get("name").getAsString();
-			List<String> lines = new ArrayList<>();
-			script.get("lines").getAsJsonArray().forEach(line -> lines.add(line.getAsString()));
+			String lines = script.get("lines").getAsString();
 			data.addScript(name, lines);
 		});
 		return data;
@@ -86,13 +85,10 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 		if (data.hasReceiver())
 			object.addProperty("receiver-port", data.getReceiverPort());
 		JsonArray array = new JsonArray();
-		for (Entry<String, Collection<String>> entry : data.getScripts().asMap().entrySet()) {
+		for (String key : data.getScripts().keySet()) {
 			JsonObject script = new JsonObject();
-			script.addProperty("name", entry.getKey());
-			JsonArray lines = new JsonArray();
-			for (String line : entry.getValue())
-				lines.add(line);
-			script.add("lines", lines);
+			script.addProperty("name", key);
+			script.addProperty("lines", data.getScripts().get(key));
 			array.add(script);
 		}
 		object.add("scripts", array);

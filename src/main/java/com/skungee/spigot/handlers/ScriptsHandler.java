@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -41,14 +42,16 @@ public class ScriptsHandler extends Executor {
 			if (!script.has("name") || !script.has("lines"))
 				return;
 			String name = script.get("name").getAsString();
-			List<String> lines = new ArrayList<>();
-			script.get("lines").getAsJsonArray().forEach(line -> lines.add(line.getAsString()));
+
+			String base64Encoded = script.get("lines").getAsString();
+			byte[] decoded = Base64.getDecoder().decode(base64Encoded);
+
 			File file;
 			try {
 				file = File.createTempFile("Skungee", name);
-				PrintStream out = new PrintStream(new FileOutputStream(file), true, "UTF-8");
-				out.print(StringUtils.join(lines.toArray(new String[lines.size()]), '\n'));
-				out.close();
+				FileOutputStream fos = new FileOutputStream(file);
+				fos.write(decoded);
+				fos.close();
 				// I don't care if you are there
 //				Optional<File> existing = Stream.of(scriptsFolder.listFiles(new FilenameFilter() {
 //					@Override

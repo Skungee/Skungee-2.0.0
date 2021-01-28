@@ -5,15 +5,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -55,7 +48,7 @@ public class ServerDataManager {
 		Charset chars = Charset.defaultCharset();
 		if (!charset.equals("default"))
 			chars = Charset.forName(charset);
-		Multimap<String, String> map = HashMultimap.create();
+		HashMap<String, String> map = new HashMap<String, String>();
 		// Find all scripts.
 		for (File file : scripts.listFiles()) {
 			try {
@@ -66,12 +59,12 @@ public class ServerDataManager {
 								platform.consoleMessage("Skungee will not read directories inside server directories, skipping " + script.getAbsolutePath());
 								continue;
 							}
-							map.putAll(script.getName(), Files.readAllLines(script.toPath(), chars));
+							map.put(script.getName(), Base64.getEncoder().encodeToString(Files.readAllBytes(script.toPath())));
 						}
 					}
 					continue;
 				}
-				map.putAll(file.getName(), Files.readAllLines(file.toPath(), chars));
+				map.put(file.getName(), Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath())));
 			} catch (IOException e) {
 				platform.consoleMessage("Charset " + charset + " does not support some symbols in script " + file.getAbsolutePath());
 				e.printStackTrace();
@@ -81,28 +74,22 @@ public class ServerDataManager {
 		if (map.isEmpty())
 			return;
 		// Remove scripts that don't need updating.
-		Multimap<String, String> existing = HashMultimap.create();
+		HashMap<String, String> newMap = new HashMap<String, String>();
+		newMap.putAll(map);
+		HashMap<String, String> existing = new HashMap<String, String>();
 		existing.putAll(data.getScripts());
-		for (Entry<String, Collection<String>> entry : map.asMap().entrySet()) {
-			for (Entry<String, Collection<String>> existingEntry : existing.asMap().entrySet()) {
-				String current = "";
-				current = existingEntry.getKey();
-				if (current.equalsIgnoreCase(entry.getKey())) {
-					// If this script matches what is currently on the Spigot, then ignore this script.
-					if (existingEntry.getValue().equals(entry.getValue())) {
-						map.removeAll(current);
+		for(String bungeeKey : map.keySet()) {
+			for(String serverKey : existing.keySet()) {
+				if(bungeeKey.equalsIgnoreCase(serverKey)) {
+					if(map.get(bungeeKey).equals(existing.get(serverKey))) {
+						newMap.remove(bungeeKey);
 						continue;
 					}
 				}
 			}
 		}
-		// Setup the sending multimap for the correct scripts.
-		Multimap<String, String> send = HashMultimap.create();
-		for (Entry<String, String> entry : map.entries()) {
-			send.put(entry.getKey(), entry.getValue());
-		}
 		// Don't send when there's nothing to update
-		if(send.isEmpty()) return;
+		if(newMap.isEmpty()) return;
 		// Send the packet.
 		try {
 			Skungee.getPlatform().debugMessage("Send GlobalScript Packet to "+data.getJapsonAddress());
@@ -111,13 +98,10 @@ public class ServerDataManager {
 				public JsonObject toJson() {
 					JsonObject object = new JsonObject();
 					JsonArray scriptsArray = new JsonArray();
-					for (Entry<String, Collection<String>> entry : send.asMap().entrySet()) {
+					for (String key : newMap.keySet()) {
 						JsonObject script = new JsonObject();
-						script.addProperty("name", entry.getKey());
-						JsonArray lines = new JsonArray();
-						for (String line : entry.getValue())
-							lines.add(line);
-						script.add("lines", lines);
+						script.addProperty("name", key);
+						script.addProperty("lines", newMap.get(key));
 						scriptsArray.add(script);
 					}
 					object.add("scripts", scriptsArray);
@@ -131,7 +115,7 @@ public class ServerDataManager {
 
 	public static class ServerData {
 
-		private final Multimap<String, String> scripts = HashMultimap.create();
+		private final HashMap<String, String> scripts = new HashMap<String, String>();
 		private final InetSocketAddress japsonAddress, serverAddress;
 		private Set<UUID> whitelisted = new HashSet<>();
 		private String motd, version;
@@ -143,12 +127,12 @@ public class ServerDataManager {
 			this.japsonAddress = japsonAddress;
 		}
 
-		public Multimap<String, String> getScripts() {
+		public HashMap<String, String> getScripts() {
 			return scripts;
 		}
 
-		public void addScript(String name, List<String> lines) {
-			this.scripts.putAll(name, lines);
+		public void addScript(String name, String lines) {
+			this.scripts.put(name, lines);
 		}
 
 		public InetSocketAddress getAddress() {
