@@ -80,16 +80,24 @@ public class Utils {
 	}
 
 	public static boolean isPortTaken(int port) {
-		DatagramSocket socket = null;
+		DatagramSocket datagramSocket = null;
+		ServerSocket serverSocket = null;
 		try {
-			socket = new DatagramSocket(port);
-			socket.setReuseAddress(true);
+			datagramSocket = new DatagramSocket(port);
+			datagramSocket.setReuseAddress(true);
+			serverSocket = new ServerSocket(port);
+			serverSocket.setReuseAddress(true);
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (socket != null) {
-				socket.close();
+			if (datagramSocket != null) datagramSocket.close();
+			if (serverSocket != null) {
+				try {
+					serverSocket.close();
+				} catch (IOException e) {
+
+				}
 			}
 		}
 		return true;
