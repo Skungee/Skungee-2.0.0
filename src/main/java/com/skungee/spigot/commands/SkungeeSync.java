@@ -2,6 +2,7 @@ package com.skungee.spigot.commands;
 
 import com.skungee.spigot.SpigotSkungee;
 import com.skungee.spigot.tasks.ServerDataTask;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +17,8 @@ public class SkungeeSync implements CommandExecutor {
             return true;
         }
 
-        new ServerDataTask(SpigotSkungee.getInstance(), SpigotSkungee.getInstance().getJapsonClient());
+        sender.sendMessage(ChatColor.GREEN+"Start sync with BungeeCord..");
+        Bukkit.getScheduler().runTaskAsynchronously(SpigotSkungee.getInstance(), new ServerDataTask(SpigotSkungee.getInstance(), SpigotSkungee.getInstance().getJapsonClient()));
 
         return true;
     }
