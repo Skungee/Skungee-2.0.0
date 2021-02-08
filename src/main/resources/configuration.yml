@@ -15,6 +15,12 @@ port: 8000
 # The address to bind to.
 bind-address: "127.0.0.1"
 
+# All addresses allowed to connected.
+# All registered servers to the proxy are already whitelisted addresses.
+# If you have addresses that aren't linked to the proxy you can add them here.
+whitelisted-addresses:
+    - "127.0.0.1"
+
 protocol:
     # The packet buffer size in bytes.
     # Default size is the UDP standard 1024

@@ -126,6 +126,7 @@ public class VelocitySkungee implements ProxyPlatform {
 			address.addAll(proxy.getAllServers().stream()
 					.map(server -> server.getServerInfo().getAddress().getAddress())
 					.collect(Collectors.toList()));
+			address.addAll(configuration.getWhitelistedAddresses());
 			japson.setAllowedAddresses(address.stream().toArray(InetAddress[]::new));
 			japson.registerListener(new Listener() {
 				@Override

@@ -16,6 +16,13 @@ ignored-debug = [
   "SERVER_DATA"
 ]
 
+# All addresses allowed to connected.
+# All registered servers to the proxy are already whitelisted addresses.
+# If you have addresses that aren't linked to the proxy you can add them here.
+whitelisted-addresses = [
+  "127.0.0.1"
+]
+
 # Configurations relating to the Japson protocol.
 [protocol]
 

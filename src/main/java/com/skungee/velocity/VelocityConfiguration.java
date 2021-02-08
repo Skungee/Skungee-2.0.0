@@ -1,5 +1,7 @@
 package com.skungee.velocity;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import com.skungee.shared.Packets;
 
 public class VelocityConfiguration implements ProxyConfiguration {
 
+	private final Set<InetAddress> whitelisted = new HashSet<>();
 	private final Set<Packets> ignored = new HashSet<>();
 	private final int PORT, INTERVAL, BUFFER_SIZE, VERSION;
 	private final String STORAGE_TYPE, ADDRESS, CHARSET;
@@ -51,6 +54,22 @@ public class VelocityConfiguration implements ProxyConfiguration {
 			}
 			return null;
 		}).filter(packet -> packet != null).collect(Collectors.toSet()));
+
+		whitelisted.addAll(configuration.getList("whitelisted-addresses").stream().map(address -> {
+			if (!(address instanceof String))
+				return null;
+			try {
+				return InetAddress.getByName((String)address);
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}).filter(address -> address != null).collect(Collectors.toSet()));
+	}
+
+	@Override
+	public Set<InetAddress> getWhitelistedAddresses() {
+		return whitelisted;
 	}
 
 	@Override
