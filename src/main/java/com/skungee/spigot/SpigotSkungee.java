@@ -35,11 +35,11 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 
 	private SpigotConfiguration configuration;
 	private static SpigotSkungee instance;
-	private static SkungeeAPI API;
 	private JapsonServer receiver;
 	private JapsonClient japson;
 	private SkriptAddon addon;
 	private Metrics metrics;
+	private SkungeeAPI API;
 
 	@Override
 	public void onEnable() {
@@ -134,7 +134,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 		return addon;
 	}
 
-	public static SkungeeAPI getAPI() {
+	public SkungeeAPI getAPI() {
 		return API;
 	}
 

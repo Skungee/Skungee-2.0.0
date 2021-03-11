@@ -47,9 +47,9 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	private BungeecordConfiguration configuration;
 	private VariableManager variableManager;
 	private static BungeeSkungee instance;
-	private static SkungeeAPI API;
 	private JapsonServer japson;
 	private File SCRIPTS_FOLDER;
+	private SkungeeAPI API;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -157,7 +157,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		return japson;
 	}
 
-	public static SkungeeAPI getAPI() {
+	public SkungeeAPI getAPI() {
 		return API;
 	}
 
