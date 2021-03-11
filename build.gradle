@@ -120,6 +120,7 @@ shadowJar {
 	configurations = [project.configurations.shadow]
 	archiveVersion = version
 	baseName = project.name
+	relocate 'com.sitrica.japson', 'com.skungee.japson'
 	classifier = ''
 	minimize()
 }
