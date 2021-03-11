@@ -107,6 +107,18 @@ public class SkungeeAPI {
 		platform.getJapsonServer().registerHandlers(handlers);
 	}
 
+	public <H extends APIHandler> void registerHandlers(@SuppressWarnings("unchecked") H... handlers) {
+		platform.getJapsonServer().registerHandlers(handlers);
+	}
+
+	public <H extends APIExecutor> void registerHandler(@SuppressWarnings("unchecked") H... executors) {
+		platform.getJapsonServer().registerHandlers(executors);
+	}
+
+	public <H extends APIExecutor> void registerHandlers(@SuppressWarnings("unchecked") H... executors) {
+		platform.getJapsonServer().registerHandlers(executors);
+	}
+
 	// Because Bungeecord Class loader is dumb
 	public static abstract class APIHandler extends Handler {
 
