@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.sitrica.japson.gson.JsonObject;
+import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.sitrica.japson.shared.Packet;
 import com.sitrica.japson.shared.ReturnablePacket;
@@ -110,6 +111,14 @@ public class SkungeeAPI {
 	public static abstract class APIHandler extends Handler {
 
 		public APIHandler(int id) {
+			super(id);
+		}
+		
+	}
+
+	public static abstract class APIExecutor extends Executor {
+
+		public APIExecutor(int id) {
 			super(id);
 		}
 		
