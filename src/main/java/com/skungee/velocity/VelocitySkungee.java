@@ -60,12 +60,13 @@ public class VelocitySkungee implements ProxyPlatform {
 	private final ProxyServer proxy;
 	private final Logger logger;
 	private JapsonServer japson;
+	private SkungeeAPI API;
 
 	@Inject
 	public VelocitySkungee(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
 		this.proxy = proxy;
 		this.logger = logger;
-		SkungeeAPI.register(this);
+		API = new SkungeeAPI(this);
 		dataFolder = path.toFile();
 		SCRIPTS_FOLDER = new File(dataFolder, File.separator + "scripts");
 		if (!SCRIPTS_FOLDER.exists())
@@ -188,6 +189,10 @@ public class VelocitySkungee implements ProxyPlatform {
 	public void debugMessages(String... messages) {
 		for (String message : messages)
 			logger.debug(message);
+	}
+
+	public SkungeeAPI getAPI() {
+		return API;
 	}
 
 	@Override

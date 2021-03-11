@@ -21,12 +21,10 @@ import com.skungee.shared.objects.SkungeeServer;
 
 public class SkungeeAPI {
 
-	private static ProxyPlatform platform;
+	private final ProxyPlatform platform;
 
-	public static void register(ProxyPlatform platform) {
-		if (SkungeeAPI.platform != null)
-			return;
-		SkungeeAPI.platform = platform;
+	public SkungeeAPI(ProxyPlatform platform) {
+		this.platform = platform;
 	}
 
 	/**
@@ -35,7 +33,7 @@ public class SkungeeAPI {
 	 * @param uuids The UUID's to be converted to SkungeePlayers.
 	 * @return The SkungeePlayers converted.
 	 */
-	public static List<SkungeePlayer> getPlayers(UUID... uuids) {
+	public List<SkungeePlayer> getPlayers(UUID... uuids) {
 		return Arrays.stream(uuids)
 				.map(uuid -> platform.getPlayer(uuid))
 				.filter(Optional::isPresent)
@@ -49,7 +47,7 @@ public class SkungeeAPI {
 	 * @param usernames The String's to be converted to SkungeePlayers.
 	 * @return The SkungeePlayers converted.
 	 */
-	public static List<SkungeePlayer> getPlayers(String... usernames) {
+	public List<SkungeePlayer> getPlayers(String... usernames) {
 		return Arrays.stream(usernames)
 				.map(username -> platform.getPlayer(username))
 				.filter(Optional::isPresent)
@@ -62,7 +60,7 @@ public class SkungeeAPI {
 	 * 
 	 * @return connected servers.
 	 */
-	public static Set<SkungeeServer> getServers() {
+	public Set<SkungeeServer> getServers() {
 		return Collections.unmodifiableSet(platform.getServers());
 	}
 
@@ -74,7 +72,7 @@ public class SkungeeAPI {
 	 * @throws InterruptedException 
 	 * @throws TimeoutException 
 	 */
-	public static void sendJson(SkungeeServer server, JsonObject json) throws InterruptedException, ExecutionException, TimeoutException {
+	public void sendJson(SkungeeServer server, JsonObject json) throws InterruptedException, ExecutionException, TimeoutException {
 		Packet packet = new Packet(Packets.API.getPacketId()) {
 			@Override
 			public JsonObject toJson() {
@@ -90,7 +88,7 @@ public class SkungeeAPI {
 	 * @param packet The Japson ReturningPacket to send.
 	 * @return The data returned from the handler on the proxy.
 	 */
-	public static <T> T sendPacket(SkungeeServer server, JsonObject json, Function<JsonObject, T> function) throws TimeoutException, InterruptedException, ExecutionException {
+	public <T> T sendPacket(SkungeeServer server, JsonObject json, Function<JsonObject, T> function) throws TimeoutException, InterruptedException, ExecutionException {
 		ReturnablePacket<T> packet = new ReturnablePacket<T>(Packets.API.getPacketId()) {
 			@Override
 			public JsonObject toJson() {
@@ -104,8 +102,17 @@ public class SkungeeAPI {
 		return platform.getJapsonServer().sendPacket(server.getServerData().getJapsonAddress(), packet);
 	}
 
-	public static <H extends Handler> void registerHandler(@SuppressWarnings("unchecked") H... handlers) {
+	public <H extends APIHandler> void registerHandler(@SuppressWarnings("unchecked") H... handlers) {
 		platform.getJapsonServer().registerHandlers(handlers);
+	}
+
+	// Because Bungeecord Class loader is dumb
+	public static abstract class APIHandler extends Handler {
+
+		public APIHandler(int id) {
+			super(id);
+		}
+		
 	}
 
 }
