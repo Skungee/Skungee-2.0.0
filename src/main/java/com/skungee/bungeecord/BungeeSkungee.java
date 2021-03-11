@@ -49,13 +49,12 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	private static BungeeSkungee instance;
 	private JapsonServer japson;
 	private File SCRIPTS_FOLDER;
-	private SkungeeAPI API;
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
 		instance = this;
-		API = new SkungeeAPI(this);
+		SkungeeAPI.register(this);
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
 		SCRIPTS_FOLDER = new File(getDataFolder(), File.separator + "scripts");
@@ -155,10 +154,6 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	@Override
 	public JapsonServer getJapsonServer() {
 		return japson;
-	}
-
-	public SkungeeAPI getAPI() {
-		return API;
 	}
 
 	@Override
