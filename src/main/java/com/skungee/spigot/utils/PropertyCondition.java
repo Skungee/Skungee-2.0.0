@@ -16,7 +16,7 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.conditions.base;
+package com.skungee.spigot.utils;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;

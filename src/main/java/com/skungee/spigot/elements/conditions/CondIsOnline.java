@@ -1,13 +1,12 @@
 package com.skungee.spigot.elements.conditions;
 
 import com.skungee.shared.objects.SkungeeServer;
-
-import ch.njol.skript.conditions.base.PropertyCondition;
+import com.skungee.spigot.utils.PropertyCondition;
 
 public class CondIsOnline extends PropertyCondition<SkungeeServer> {
 
 	static {
-		register(CondIsOnline.class, PropertyType.BE, "online", "skungeeservers");
+		register(CondIsOnline.class, "online", "skungeeservers");
 	}
 
 	@Override
