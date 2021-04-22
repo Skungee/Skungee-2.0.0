@@ -14,9 +14,9 @@ import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Packet;
 import com.skungee.proxy.ProxyPlatform;
-import com.skungee.proxy.ServerDataManager.ServerData;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
+import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeeServer;
 
 public class SignalHandler extends Executor {

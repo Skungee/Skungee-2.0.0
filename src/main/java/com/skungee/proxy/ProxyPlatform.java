@@ -28,6 +28,8 @@ public interface ProxyPlatform extends Platform {
 	@Override
 	public ProxyConfiguration getPlatformConfiguration();
 
+	public ServerDataManager getServerDataManager();
+
 	public VariableManager getVariableManager();
 
 	public Set<SkungeeServer> getServers();

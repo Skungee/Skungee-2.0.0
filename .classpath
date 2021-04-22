@@ -37,17 +37,17 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/deb7853e139808c5818b48f6543dd50218614d91/spigot-api-1.16.5-R0.1-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/a3fb856c056ac70862a2038f2cef2aeea5f9a9bd/spigot-api-1.16.5-R0.1-SNAPSHOT.jar">
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/c6d3e8abee92c7ad77bd9e0764d6392bbbadbb25/spigot-api-1.16.5-R0.1-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/a4aa6ace2aa41057033d876b46c7383063e6f0c5/spigot-api-1.16.5-R0.1-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-api/1.16-R0.5-SNAPSHOT/4b0dbf160545e9d5d916b58204fa12e27616f9ed/bungeecord-api-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-api/1.16-R0.5-SNAPSHOT/89399e751c378470f3d6d8059dd0b106e5c53880/bungeecord-api-1.16-R0.5-SNAPSHOT.jar">
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-api/1.16-R0.5-SNAPSHOT/2095520c3231cd93be6f03c47610b599f15d55b9/bungeecord-api-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-api/1.16-R0.5-SNAPSHOT/206590f1a5c8c090e9d8b7d14bd8d4bf8013574a/bungeecord-api-1.16-R0.5-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-protocol/1.16-R0.5-SNAPSHOT/52d44aed390b8a060ef1be64ba0bf7fde999583b/bungeecord-protocol-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-protocol/1.16-R0.5-SNAPSHOT/a198b463e793f739437080345ce59d4b5c0b5fab/bungeecord-protocol-1.16-R0.5-SNAPSHOT.jar">
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-protocol/1.16-R0.5-SNAPSHOT/3fafa71bd5f88eda85541f817942b15c99afda9/bungeecord-protocol-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-protocol/1.16-R0.5-SNAPSHOT/19baba09eb77fca31a4af512fae1f2b1f8feae13/bungeecord-protocol-1.16-R0.5-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
@@ -97,12 +97,12 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-config/1.16-R0.5-SNAPSHOT/6921740072f6264248cef587ad8305c17ef30876/bungeecord-config-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-config/1.16-R0.5-SNAPSHOT/e3b7a425d6f5d30f5af579e81c877b48d5567f4a/bungeecord-config-1.16-R0.5-SNAPSHOT.jar">
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-config/1.16-R0.5-SNAPSHOT/88b67b69f49593b37a4a85b5e5e2ed32e83ff066/bungeecord-config-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-config/1.16-R0.5-SNAPSHOT/4566b058c9dd8e8ec32838f0d93445d828cff7a3/bungeecord-config-1.16-R0.5-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-event/1.16-R0.5-SNAPSHOT/e24b033da28daafc49ce07c31727e9edcdf4044c/bungeecord-event-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-event/1.16-R0.5-SNAPSHOT/67a417cd1551520ce553a5c49f0c490442b4e7ad/bungeecord-event-1.16-R0.5-SNAPSHOT.jar">
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-event/1.16-R0.5-SNAPSHOT/54bbaee6d31c57375bb70ae70d2d01577622c357/bungeecord-event-1.16-R0.5-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-event/1.16-R0.5-SNAPSHOT/fd72e7f3abcfb65ae565243ab2f4eff8c82e0c55/bungeecord-event-1.16-R0.5-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>

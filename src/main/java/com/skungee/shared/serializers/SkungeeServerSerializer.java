@@ -8,7 +8,7 @@ import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.gson.JsonParseException;
 import com.sitrica.japson.gson.JsonSerializationContext;
 import com.sitrica.japson.shared.Serializer;
-import com.skungee.proxy.ServerDataManager.ServerData;
+import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeeServer;
 
 public class SkungeeServerSerializer implements Serializer<SkungeeServer> {

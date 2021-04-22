@@ -25,11 +25,11 @@ import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
-import com.skungee.proxy.ServerDataManager.ServerData;
 import com.skungee.proxy.SkungeeAPI;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
+import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 
@@ -45,6 +45,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 public class BungeeSkungee extends Plugin implements ProxyPlatform {
 
 	private BungeecordConfiguration configuration;
+	private ServerDataManager serverDataManager;
 	private VariableManager variableManager;
 	private static BungeeSkungee instance;
 	private JapsonServer japson;
@@ -55,6 +56,12 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	@Override
 	public void onEnable() {
 		instance = this;
+		try {
+			Skungee.setPlatform(this);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		serverDataManager = new ServerDataManager(this);
 		API = new SkungeeAPI(this);
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
@@ -134,11 +141,6 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
-		try {
-			Skungee.setPlatform(this);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
 		variableManager = new VariableManager(this);
 		consoleMessage("Started on " + japson.getAddress().getHostAddress() + ":" + configuration.getPort());
 	}
@@ -196,8 +198,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	}
 
 	public Optional<SkungeeServer> getServer(ServerInfo info) {
-		@SuppressWarnings("deprecation")
-		Optional<ServerData> dataOptional = ServerDataManager.get(info.getAddress());
+		Optional<ServerData> dataOptional = serverDataManager.get((InetSocketAddress)info.getSocketAddress());
 		if (!dataOptional.isPresent())
 			return Optional.empty();
 		ServerData data = dataOptional.get();
@@ -264,6 +265,11 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	@Override
 	public void delay(Runnable task, long delay, TimeUnit unit) {
 		ProxyServer.getInstance().getScheduler().schedule(this, task, delay, unit);
+	}
+
+	@Override
+	public ServerDataManager getServerDataManager() {
+		return serverDataManager;
 	}
 
 	@Override

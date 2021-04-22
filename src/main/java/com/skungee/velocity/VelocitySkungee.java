@@ -30,11 +30,11 @@ import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ServerDataManager;
-import com.skungee.proxy.ServerDataManager.ServerData;
 import com.skungee.proxy.SkungeeAPI;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.Skungee;
+import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 import com.velocitypowered.api.event.Subscribe;
@@ -55,6 +55,7 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 public class VelocitySkungee implements ProxyPlatform {
 
 	private final VelocityConfiguration configuration;
+	private final ServerDataManager serverDataManager;
 	private final File dataFolder, SCRIPTS_FOLDER;
 	private final VariableManager variableManager;
 	private final ProxyServer proxy;
@@ -66,6 +67,7 @@ public class VelocitySkungee implements ProxyPlatform {
 	public VelocitySkungee(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
 		this.proxy = proxy;
 		this.logger = logger;
+		serverDataManager = new ServerDataManager(this);
 		API = new SkungeeAPI(this);
 		dataFolder = path.toFile();
 		SCRIPTS_FOLDER = new File(dataFolder, File.separator + "scripts");
@@ -218,7 +220,7 @@ public class VelocitySkungee implements ProxyPlatform {
 	}
 
 	public Optional<SkungeeServer> getServer(ServerInfo info) {
-		Optional<ServerData> dataOptional = ServerDataManager.get(info.getAddress());
+		Optional<ServerData> dataOptional = serverDataManager.get(info.getAddress());
 		if (!dataOptional.isPresent())
 			return Optional.empty();
 		ServerData data = dataOptional.get();
@@ -292,6 +294,11 @@ public class VelocitySkungee implements ProxyPlatform {
 	@Override
 	public void delay(Runnable task, long delay, TimeUnit unit) {
 		proxy.getScheduler().buildTask(this, task).delay(delay, unit);
+	}
+
+	@Override
+	public ServerDataManager getServerDataManager() {
+		return serverDataManager;
 	}
 
 	@Override

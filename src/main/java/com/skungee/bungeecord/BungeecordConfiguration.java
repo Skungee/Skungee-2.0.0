@@ -16,8 +16,9 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 	private final Set<InetAddress> whitelisted = new HashSet<>();
 	private final Set<Packets> ignored = new HashSet<>();
 	private final int PORT, INTERVAL, BUFFER_SIZE, VERSION;
-	private final String STORAGE_TYPE, ADDRESS, CHARSET;
 	private final boolean DEBUG, BACKUPS, MESSAGES;
+	private final String STORAGE_TYPE, ADDRESS;
+	private String CHARSET;
 
 	public BungeecordConfiguration(Configuration configuration, int version) {
 		ignored.addAll(configuration.getList("ignored-packets").stream().map(object -> {
@@ -46,6 +47,8 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 		BACKUPS = configuration.getBoolean("network-variables.backups.enabled", true);
 		STORAGE_TYPE = configuration.getString("network-variables.type", "CSV");
 		CHARSET = configuration.getString("global-scripts.charset", "default");
+		if (CHARSET.equals("default"))
+			CHARSET = "UTF-8";
 		BUFFER_SIZE = configuration.getInt("protocol.buffer-size", 1024);
 		VERSION = configuration.getInt("configuration-version", version);
 		ADDRESS = configuration.getString("bind-address", "127.0.0.1");

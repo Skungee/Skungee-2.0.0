@@ -1,6 +1,7 @@
 package com.skungee.shared.serializers;
 
 import java.lang.reflect.Type;
+
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +18,7 @@ import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.gson.JsonParseException;
 import com.sitrica.japson.gson.JsonSerializationContext;
 import com.sitrica.japson.shared.Serializer;
-import com.skungee.proxy.ServerDataManager.ServerData;
+import com.skungee.shared.objects.ServerData;
 
 public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 
@@ -57,16 +58,18 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 			data.setReceiverPort(object.get("receiver-port").getAsInt());
 
 		// Scripts
-		JsonArray scripts = object.get("scripts").getAsJsonArray();
-		scripts.forEach(element -> {
-			JsonObject script = element.getAsJsonObject();
-			if (!script.has("name") || !script.has("lines"))
-				return;
-			String name = script.get("name").getAsString();
-			List<String> lines = new ArrayList<>();
-			script.get("lines").getAsJsonArray().forEach(line -> lines.add(line.getAsString()));
-			data.addScript(name, lines);
-		});
+		if (object.has("scripts")) {
+			JsonArray scripts = object.get("scripts").getAsJsonArray();
+			scripts.forEach(element -> {
+				JsonObject script = element.getAsJsonObject();
+				if (!script.has("name") || !script.has("lines"))
+					return;
+				String name = script.get("name").getAsString();
+				List<String> lines = new ArrayList<>();
+				script.get("lines").getAsJsonArray().forEach(line -> lines.add(line.getAsString()));
+				data.addScript(name, lines);
+			});
+		}
 		return data;
 	}
 

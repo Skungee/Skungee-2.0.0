@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import com.skungee.proxy.ServerDataManager.ServerData;
-
 public class SkungeeServer {
 
 	private final ServerData data;

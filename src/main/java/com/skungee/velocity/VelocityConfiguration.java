@@ -15,8 +15,9 @@ public class VelocityConfiguration implements ProxyConfiguration {
 	private final Set<InetAddress> whitelisted = new HashSet<>();
 	private final Set<Packets> ignored = new HashSet<>();
 	private final int PORT, INTERVAL, BUFFER_SIZE, VERSION;
-	private final String STORAGE_TYPE, ADDRESS, CHARSET;
 	private final boolean DEBUG, BACKUPS, MESSAGES;
+	private final String STORAGE_TYPE, ADDRESS;
+	private String CHARSET;
 
 	public VelocityConfiguration(Toml configuration, long version) {
 
@@ -40,6 +41,8 @@ public class VelocityConfiguration implements ProxyConfiguration {
 
 		Toml scripts = configuration.getTable("global-scripts");
 		CHARSET = scripts.getString("charset", "default");
+		if (CHARSET.equals("default"))
+			CHARSET = "UTF-8";
 
 		ignored.addAll(configuration.getList("ignored-packets").stream().map(object -> {
 			if (object instanceof String) {

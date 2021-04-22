@@ -7,13 +7,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -23,12 +19,17 @@ import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Packet;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
+import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeeServer;
 
 public class ServerDataManager {
 
-	private final static Map<InetSocketAddress, ServerData> map = new HashMap<>();
+	private final Map<InetSocketAddress, ServerData> map = new HashMap<>();
+	private final ProxyPlatform platform;
+
+	public ServerDataManager(ProxyPlatform platform) {
+		this.platform = platform;
+	}
 
 	/**
 	 * Grab a ServerData from the actual defined address in the config.yml of a sevrer.
@@ -36,23 +37,32 @@ public class ServerDataManager {
 	 * @param address The server of the server to get or make.
 	 * @return The ServerData found or generated.
 	 */
-	public static Optional<ServerData> get(InetSocketAddress address) {
-		return Optional.ofNullable(map.get(address));
+	public Optional<ServerData> get(InetSocketAddress address) {
+		for (Entry<InetSocketAddress, ServerData> entry : map.entrySet()) {
+			if (address.equals(entry.getKey()))
+				return Optional.ofNullable(entry.getValue());
+			if (address.getHostName().equals("localhost") && entry.getKey().getHostName().equals("localhost") && address.getPort() == entry.getKey().getPort())
+				return Optional.ofNullable(entry.getValue());
+			if (address.getAddress().isAnyLocalAddress() && entry.getKey().getAddress().isAnyLocalAddress() && address.getPort() == entry.getKey().getPort())
+				return Optional.ofNullable(entry.getValue());
+			if (address.getHostString().equals(entry.getKey().getHostString()) && address.getPort() == entry.getKey().getPort())
+				return Optional.ofNullable(entry.getValue());
+		}
+		return Optional.empty();
 	}
 
-	public static void set(InetSocketAddress address, ServerData data) {
+	public void set(InetSocketAddress address, ServerData data) {
 		map.put(address, data);
-		checkGlobalScripts(data);
+		//checkGlobalScripts(data);
 	}
 
-	public static void checkGlobalScripts(ServerData data) {
-		ProxyPlatform platform = (ProxyPlatform) Skungee.getPlatform();
+	public void checkGlobalScripts(ServerData data) {
 		File scripts = platform.getScriptsDirectory();
 		if (!scripts.isDirectory() || scripts.listFiles().length <= 0 || !data.hasReceiver())
 			return;
 		SkungeeServer server = data.getServer();
 		String charset = platform.getPlatformConfiguration().getScriptsCharset();
-		Charset chars = Charset.defaultCharset();
+		Charset chars = Charset.forName("UTF-8");
 		if (!charset.equals("default"))
 			chars = Charset.forName(charset);
 		Multimap<String, String> map = HashMultimap.create();
@@ -129,88 +139,6 @@ public class ServerDataManager {
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			platform.debugMessage("Failed to send global scripts packet: " + e.getLocalizedMessage());
 		}
-	}
-
-	public static class ServerData {
-
-		private final Multimap<String, String> scripts = HashMultimap.create();
-		private final InetSocketAddress japsonAddress, serverAddress;
-		private Set<UUID> whitelisted = new HashSet<>();
-		private String motd, version;
-		private Integer receiverPort;
-		private int limit;
-
-		public ServerData(InetSocketAddress serverAddress, InetSocketAddress japsonAddress) {
-			this.serverAddress = serverAddress;
-			this.japsonAddress = japsonAddress;
-		}
-
-		public Multimap<String, String> getScripts() {
-			return scripts;
-		}
-
-		public void addScript(String name, List<String> lines) {
-			this.scripts.putAll(name, lines);
-		}
-
-		public InetSocketAddress getAddress() {
-			return serverAddress;
-		}
-
-		public InetSocketAddress getJapsonAddress() {
-			return japsonAddress;
-		}
-
-		public String getMotd() {
-			return motd;
-		}
-
-		public SkungeeServer getServer() {
-			return ((ProxyPlatform)Skungee.getPlatform()).getServer(serverAddress)
-					.orElseThrow(() -> new IllegalStateException("There was no server found under " + serverAddress
-							+ " but server data exists? Please report this on the Skungee GitHub."));
-		}
-
-		public void setWhitelisted(Set<UUID> whitelisted) {
-			this.whitelisted = whitelisted;
-		}
-
-		public Set<UUID> getWhitelisted() {
-			return whitelisted;
-		}
-
-		public void setReceiverPort(int receiverPort) {
-			this.receiverPort = receiverPort;
-		}
-
-		public void setMotd(String motd) {
-			this.motd = motd;
-		}
-
-		public boolean hasReceiver() {
-			return receiverPort != null;
-		}
-
-		public int getReceiverPort() {
-			return receiverPort;
-		}
-
-		public String getVersion() {
-			return version;
-		}
-
-		public void setVersion(String version) {
-			this.version = version;
-		}
-
-		public int getMaxPlayerLimit() {
-			return limit;
-		}
-
-		public void setMaxPlayerLimit(int limit) {
-			this.limit = limit;
-		}
-
 	}
 
 }
