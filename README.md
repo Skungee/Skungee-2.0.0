@@ -29,7 +29,7 @@ Proxy side:
 ```java
 // Running our void
 try {
-	Skungee.getPlatform().setApiHandler(new Executor(Packets.API.getPacketId()) {
+	ProxySkungee.getPlatform().registerHandler(new Executor(Packets.API.getPacketId()) {
 
 		@Override
 		public void execute(InetAddress address, int port, JsonObject object) {
@@ -46,7 +46,7 @@ try {
 
 // Returning data.
 try {
-	Skungee.getPlatform().setApiHandler(new Handler(Packets.API.getPacketId()) {
+	ProxySkungee.getPlatform().registerHandler(new Handler(Packets.API.getPacketId()) {
 
 		@Override
 		public JsonObject handle(InetAddress address, int port, JsonObject object) {
