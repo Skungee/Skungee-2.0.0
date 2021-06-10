@@ -29,11 +29,11 @@ import com.sitrica.japson.server.Listener;
 import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
+import com.skungee.proxy.ProxySkungee;
 import com.skungee.proxy.ServerDataManager;
 import com.skungee.proxy.SkungeeAPI;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
@@ -89,7 +89,7 @@ public class VelocitySkungee implements ProxyPlatform {
 		}
 		configuration = new VelocityConfiguration(new Toml().read(file), 1);
 		try {
-			Skungee.setPlatform(this);
+			ProxySkungee.setPlatform(this);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}

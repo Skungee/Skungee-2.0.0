@@ -8,14 +8,13 @@ import java.util.UUID;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.skungee.proxy.ProxyPlatform;
-import com.skungee.shared.Skungee;
 
 public class ServerData {
 
 	private final Multimap<String, String> scripts = HashMultimap.create();
 	private final InetSocketAddress japsonAddress, serverAddress;
 	private Set<UUID> whitelisted = new HashSet<>();
+	private InetSocketAddress receiverAddress;
 	private String motd, version;
 	private Integer receiverPort;
 	private int limit;
@@ -41,17 +40,26 @@ public class ServerData {
 		return japsonAddress;
 	}
 
+	public InetSocketAddress getReceiverAddress() throws IllegalAccessException {
+		if (!hasReceiver())
+			throw new IllegalAccessException("The server data from address " + serverAddress.getHostName() + ":" + serverAddress.getPort() + " does not have a receiver!");
+		if (receiverAddress != null)
+			return receiverAddress;
+		receiverAddress = new InetSocketAddress(japsonAddress.getAddress(), receiverPort);
+		return receiverAddress;
+	}
+
 	public String getMotd() {
 		return motd;
 	}
-
-	public SkungeeServer getServer() {
-		if (!(Skungee.getPlatform() instanceof ProxyPlatform))
-			throw new IllegalStateException("The method getServer can only be called from a Proxy in ServerData");
-		return ((ProxyPlatform)Skungee.getPlatform()).getServer(serverAddress)
-				.orElseThrow(() -> new IllegalStateException("There was no server found under " + serverAddress
-						+ " but server data exists? Please report this on the Skungee GitHub."));
-	}
+//
+//	public SkungeeServer getServer() {
+//		if (!(Skungee.getPlatform() instanceof ProxyPlatform))
+//			throw new IllegalStateException("The method getServer can only be called from a Proxy in ServerData");
+//		return ((ProxyPlatform)Skungee.getPlatform()).getServer(serverAddress)
+//				.orElseThrow(() -> new IllegalStateException("There was no server found under " + serverAddress
+//						+ " but server data exists? Please report this on the Skungee GitHub."));
+//	}
 
 	public void setWhitelisted(Set<UUID> whitelisted) {
 		this.whitelisted = whitelisted;
@@ -63,6 +71,7 @@ public class ServerData {
 
 	public void setReceiverPort(int receiverPort) {
 		this.receiverPort = receiverPort;
+		receiverAddress = null;
 	}
 
 	public void setMotd(String motd) {

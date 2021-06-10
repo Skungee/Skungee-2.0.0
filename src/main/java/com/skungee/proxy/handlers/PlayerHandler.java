@@ -10,8 +10,8 @@ import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
+import com.skungee.proxy.ProxySkungee;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.serializers.SkungeePlayerSerializer;
 
@@ -27,7 +27,7 @@ public class PlayerHandler extends Handler {
 	public JsonObject handle(InetAddress address, int port, JsonObject object) {
 		JsonObject returning = new JsonObject();
 		JsonArray array = new JsonArray();
-		ProxyPlatform platform = (ProxyPlatform) Skungee.getPlatform();
+		ProxyPlatform platform = ProxySkungee.getPlatform();
 		if (object.has("servers") && object.get("servers").getAsJsonArray().size() != 0) {
 			List<String> serverNames = Streams.stream(object.get("servers").getAsJsonArray())
 					.map(element -> element.getAsString())

@@ -6,8 +6,8 @@ import java.net.InetSocketAddress;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Executor;
 import com.skungee.proxy.ProxyPlatform;
+import com.skungee.proxy.ProxySkungee;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.serializers.SkungeeServerDataSerializer;
 
@@ -18,7 +18,7 @@ public class ServerDataHandler extends Executor {
 
 	public ServerDataHandler() {
 		super(Packets.SERVER_DATA.getPacketId());
-		proxy = (ProxyPlatform) Skungee.getPlatform();
+		proxy = ProxySkungee.getPlatform();
 		serializer = new SkungeeServerDataSerializer();
 	}
 

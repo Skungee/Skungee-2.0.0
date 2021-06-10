@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.objects.SkungeeServerMapper;
 
 import ch.njol.skript.Skript;
@@ -14,17 +15,17 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-public class ExprServer extends SimpleExpression<String> {
+public class ExprServer extends SimpleExpression<SkungeeServer> {
 
 	static {
-		Skript.registerExpression(ExprServer.class, String.class, ExpressionType.SIMPLE, "[proxy] server %strings%");
+		Skript.registerExpression(ExprServer.class, SkungeeServer.class, ExpressionType.SIMPLE, "[proxy] server %strings%");
 	}
 
 	private Expression<String> names;
 
 	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
+	public Class<? extends SkungeeServer> getReturnType() {
+		return SkungeeServer.class;
 	}
 
 	@Override
@@ -41,9 +42,8 @@ public class ExprServer extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
-		SkungeeServerMapper mapper = new SkungeeServerMapper();
-		return Arrays.stream(names.getArray(event)).map(name -> mapper.apply(name)).toArray(String[]::new);
+	protected SkungeeServer[] get(Event event) {
+		return Arrays.stream(names.getArray(event)).map(new SkungeeServerMapper()).toArray(SkungeeServer[]::new);
 	}
 
 	@Override

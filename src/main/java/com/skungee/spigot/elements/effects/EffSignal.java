@@ -22,8 +22,7 @@ import ch.njol.util.Kleenean;
 public class EffSignal extends Effect {
 
 	static {
-		// TODO make a custom object %signal% to be able to act like JSON and make [message] optional too.
-		Skript.registerEffect(EffSignal.class, "[send] signal message %strings% [to %-skungeeservers%]");
+		Skript.registerEffect(EffSignal.class, "[send] signal[s] [message[s]] %strings% [to %-skungeeservers%]");
 	}
 
 	private Expression<SkungeeServer> servers;

@@ -19,7 +19,7 @@ import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Executor;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
+import com.skungee.spigot.SpigotSkungee;
 
 import ch.njol.skript.Skript;
 
@@ -63,7 +63,7 @@ public class ScriptsHandler extends Executor {
 				com.google.common.io.Files.move(file, newScript);
 				Bukkit.getScheduler().runTask(Skript.getInstance(),() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sk reload " + name));
 				file.delete();
-				Skungee.getPlatform().debugMessage("Reloaded Global Script " + name);
+				SpigotSkungee.getInstance().debugMessage("Reloaded Global Script " + name);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

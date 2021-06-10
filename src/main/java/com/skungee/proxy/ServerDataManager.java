@@ -60,7 +60,9 @@ public class ServerDataManager {
 		File scripts = platform.getScriptsDirectory();
 		if (!scripts.isDirectory() || scripts.listFiles().length <= 0 || !data.hasReceiver())
 			return;
-		SkungeeServer server = data.getServer();
+		SkungeeServer server = ProxySkungee.getPlatform().getServer(data.getAddress())
+				.orElseThrow(() -> new IllegalStateException("There was no server found under " + data.getAddress()
+						+ " but server data exists? Please report this on the Skungee GitHub."));
 		String charset = platform.getPlatformConfiguration().getScriptsCharset();
 		Charset chars = Charset.forName("UTF-8");
 		if (!charset.equals("default"))

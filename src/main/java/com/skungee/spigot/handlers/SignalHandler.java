@@ -1,29 +1,29 @@
 package com.skungee.spigot.handlers;
 
 import java.net.InetAddress;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
 
 import com.google.common.collect.Streams;
 import com.sitrica.japson.gson.JsonObject;
-import com.sitrica.japson.shared.Handler;
+import com.sitrica.japson.shared.Executor;
 import com.skungee.shared.Packets;
+import com.skungee.spigot.events.SignalReceiveEvent;
 
-public class SignalHandler extends Handler {
+public class SignalHandler extends Executor {
 
 	public SignalHandler() {
 		super(Packets.SIGNAL.getPacketId());
 	}
 
 	@Override
-	public JsonObject handle(InetAddress address, int port, JsonObject object) {
+	public void execute(InetAddress address, int port, JsonObject object) {
 		if (!object.has("strings"))
-			return null;
-		List<String> strings = Streams.stream(object.get("strings").getAsJsonArray())
+			return;
+		String[] strings = Streams.stream(object.get("strings").getAsJsonArray())
 				.map(element -> element.getAsString())
-				.collect(Collectors.toList());
-		// TODO call an event with strings and make an event syntax for signals.
-		return null;
+				.toArray(String[]::new);
+		Bukkit.getPluginManager().callEvent(new SignalReceiveEvent(strings));
 	}
 
 }

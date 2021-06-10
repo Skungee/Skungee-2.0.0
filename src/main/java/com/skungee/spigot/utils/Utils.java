@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
-import com.skungee.shared.Skungee;
+import com.skungee.spigot.SpigotSkungee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.util.Timespan;
@@ -116,7 +116,7 @@ public class Utils {
 			port++;
 		}
 		if (lastException != null)
-			Skungee.getPlatform().consoleMessage("Could not find an open port between " + start + " and " + max + " make sure to port forward a port in this range.");
+			SpigotSkungee.getInstance().consoleMessage("Could not find an open port between " + start + " and " + max + " make sure to port forward a port in this range.");
 		return -1;
 	}
 

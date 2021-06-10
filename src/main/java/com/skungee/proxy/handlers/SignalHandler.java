@@ -14,8 +14,8 @@ import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Packet;
 import com.skungee.proxy.ProxyPlatform;
+import com.skungee.proxy.ProxySkungee;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeeServer;
 
@@ -29,11 +29,11 @@ public class SignalHandler extends Executor {
 	public void execute(InetAddress address, int port, JsonObject object) {
 		if (!object.has("strings"))
 			return;
-		ProxyPlatform platform = (ProxyPlatform) Skungee.getPlatform();
+		ProxyPlatform platform = ProxySkungee.getPlatform();
 		Set<SkungeeServer> servers = platform.getServers().stream()
 				.filter(server -> server.getServerData().hasReceiver())
 				.collect(Collectors.toSet());
-		if (object.has("servers") && object.get("servers").getAsJsonArray().size() != 0) {
+		if (object.has("servers")) {
 			List<String> defined = Streams.stream(object.get("servers").getAsJsonArray())
 					.map(element -> element.getAsString())
 					.collect(Collectors.toList());
@@ -47,13 +47,13 @@ public class SignalHandler extends Executor {
 		for (SkungeeServer server : servers) {
 			ServerData serverData = server.getServerData();
 			try {
-				japson.sendPacket(serverData.getJapsonAddress(), new Packet(Packets.SIGNAL.getPacketId()) {
+				japson.sendPacket(serverData.getReceiverAddress(), new Packet(Packets.SIGNAL.getPacketId()) {
 					@Override
 					public JsonObject toJson() {
 						return returning;
 					}
 				});
-			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			} catch (InterruptedException | ExecutionException | TimeoutException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}

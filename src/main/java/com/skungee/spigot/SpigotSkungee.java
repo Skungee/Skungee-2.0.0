@@ -21,7 +21,6 @@ import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.shared.Platform;
-import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.spigot.SpigotConfiguration.ReceiverPorts;
 import com.skungee.spigot.objects.SkungeePlayerMapper;
@@ -99,11 +98,6 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		try {
-			Skungee.setPlatform(this);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		}
 		consoleMessage("has been enabled!");
 	}

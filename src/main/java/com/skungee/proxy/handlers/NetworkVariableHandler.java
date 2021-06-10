@@ -11,9 +11,9 @@ import com.sitrica.japson.gson.JsonElement;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
+import com.skungee.proxy.ProxySkungee;
 import com.skungee.proxy.variables.SkungeeStorage;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
 import com.skungee.shared.objects.NetworkVariable;
 import com.skungee.shared.objects.NetworkVariable.SkriptChangeMode;
 import com.skungee.shared.objects.NetworkVariable.Value;
@@ -30,7 +30,7 @@ public class NetworkVariableHandler extends Handler {
 	@Override
 	public JsonObject handle(InetAddress address, int port, JsonObject object) {
 		JsonObject returning = new JsonObject();
-		ProxyPlatform platform = (ProxyPlatform) Skungee.getPlatform();
+		ProxyPlatform platform = ProxySkungee.getPlatform();
 		SkungeeStorage storage = platform.getVariableManager().getMainStorage();
 		if (object.has("variables")) {
 			JsonArray variables = object.get("variables").getAsJsonArray();

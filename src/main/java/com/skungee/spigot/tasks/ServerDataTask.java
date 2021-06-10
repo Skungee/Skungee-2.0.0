@@ -10,7 +10,6 @@ import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Packet;
 import com.skungee.shared.Packets;
-import com.skungee.shared.Skungee;
 import com.skungee.spigot.SpigotSkungee;
 
 public class ServerDataTask implements Runnable {
@@ -65,7 +64,7 @@ public class ServerDataTask implements Runnable {
 					if (!Bukkit.getIp().isEmpty())
 						object.addProperty("address", Bukkit.getIp());
 					else
-						object.addProperty("address", Skungee.getPlatform().getPlatformConfiguration().getBindAddress());
+						object.addProperty("address", SpigotSkungee.getInstance().getPlatformConfiguration().getBindAddress());
 					object.addProperty("motd", Bukkit.getMotd());
 					object.addProperty("port", Bukkit.getPort());
 					JsonArray whitelisted = new JsonArray();
