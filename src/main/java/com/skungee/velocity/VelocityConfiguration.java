@@ -27,6 +27,32 @@ public class VelocityConfiguration implements ProxyConfiguration {
 		ADDRESS = configurations.getString("bind-address", "127.0.0.1");
 		PORT = configurations.getLong("port", 8000L).intValue();
 		DEBUG = configurations.getBoolean("debug", false);
+		if (configurations.getList("ignored-packets") != null)
+			ignored.addAll(configurations.getList("ignored-packets").stream().map(object -> {
+				if (object instanceof String) {
+					Packets found = Packets.valueOf((String) object);
+					if (found != null)
+						return found;
+				} else if (object instanceof Number) {
+					for (Packets packet : Packets.values()) {
+						if (packet.getPacketId() == ((Number)object).intValue())
+							return packet;
+					}
+				}
+				return null;
+			}).filter(packet -> packet != null).collect(Collectors.toSet()));
+
+		if (configurations.getList("whitelisted-addresses") != null)
+			whitelisted.addAll(configurations.getList("whitelisted-addresses").stream().map(address -> {
+				if (!(address instanceof String))
+					return null;
+				try {
+					return InetAddress.getByName((String)address);
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}).filter(address -> address != null).collect(Collectors.toSet()));
 
 		Toml variables = configuration.getTable("network-variables");
 		STORAGE_TYPE = variables.getString("type", "CSV");
@@ -43,31 +69,6 @@ public class VelocityConfiguration implements ProxyConfiguration {
 		CHARSET = scripts.getString("charset", "default");
 		if (CHARSET.equals("default"))
 			CHARSET = "UTF-8";
-
-		ignored.addAll(configuration.getList("ignored-packets").stream().map(object -> {
-			if (object instanceof String) {
-				Packets found = Packets.valueOf((String) object);
-				if (found != null)
-					return found;
-			} else if (object instanceof Number) {
-				for (Packets packet : Packets.values()) {
-					if (packet.getPacketId() == ((Number)object).intValue())
-						return packet;
-				}
-			}
-			return null;
-		}).filter(packet -> packet != null).collect(Collectors.toSet()));
-
-		whitelisted.addAll(configuration.getList("whitelisted-addresses").stream().map(address -> {
-			if (!(address instanceof String))
-				return null;
-			try {
-				return InetAddress.getByName((String)address);
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}).filter(address -> address != null).collect(Collectors.toSet()));
 	}
 
 	@Override

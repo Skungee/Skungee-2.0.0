@@ -7,6 +7,12 @@ configuration-version = 1
 
 # Print additional information in the console. Useful for figuring out errors and issues.
 debug = false
+# Packets to be ignored in the debug. Developers of Skungee may ask you to change these values when reporting an issue.
+ignored-packets = [
+	"HEARTBEAT",
+	"SERVER_DATA"
+]
+
 # The address to bind to.
 bind-address = "127.0.0.1"
 # This value should be copied in every other SimpleSkungee spigot server configuration.

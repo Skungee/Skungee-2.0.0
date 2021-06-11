@@ -11,7 +11,7 @@ import com.sitrica.japson.shared.Handler;
 import com.skungee.shared.Packets;
 import com.velocitypowered.api.proxy.ProxyServer;
 
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.Component;
 
 public class MessageHandler extends Handler {
 
@@ -32,7 +32,7 @@ public class MessageHandler extends Handler {
 		object.get("players").getAsJsonArray().forEach(element -> {
 			try {
 				UUID uuid = UUID.fromString(element.getAsString());
-				proxy.getPlayer(uuid).ifPresent(player -> messages.forEach(message -> player.sendMessage(TextComponent.of(message))));
+				proxy.getPlayer(uuid).ifPresent(player -> messages.forEach(message -> player.sendMessage(Component.text(message))));
 			} catch (Exception e) {
 				return;
 			}

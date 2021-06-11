@@ -50,18 +50,18 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 /**
  * Velocity
  */
-@Plugin(id = "skungee", name = "Skungee", version = "@version@",
-		description = "The simplest Skript addon for Bungeecord.", authors = {"Skungee"})
+@Plugin(id = "skungee", name = "Skungee", version = "2.0.0-ALPHA-20",
+		description = "The ultimate Skript addon for Bungeecord.", authors = {"Skungee"})
 public class VelocitySkungee implements ProxyPlatform {
 
 	private final VelocityConfiguration configuration;
 	private final ServerDataManager serverDataManager;
 	private final File dataFolder, SCRIPTS_FOLDER;
-	private final VariableManager variableManager;
+	private VariableManager variableManager;
 	private final ProxyServer proxy;
+	private final SkungeeAPI API;
 	private final Logger logger;
 	private JapsonServer japson;
-	private SkungeeAPI API;
 
 	@Inject
 	public VelocitySkungee(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
@@ -93,8 +93,7 @@ public class VelocitySkungee implements ProxyPlatform {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		variableManager = new VariableManager(this);
-		logger.info("SimpleSkungee has been enabled!");
+		logger.info("Skungee has been enabled!");
 	}
 
 	private final VelocitySkungee getSelf() {
@@ -103,6 +102,7 @@ public class VelocitySkungee implements ProxyPlatform {
 
 	@Subscribe
 	public void onProxyInitialization(ProxyInitializeEvent event) {
+		variableManager = new VariableManager(this);
 		try {
 			japson = new JapsonServer(configuration.getBindAddress(), configuration.getPort());
 			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.velocity.handlers")
@@ -112,8 +112,12 @@ public class VelocitySkungee implements ProxyPlatform {
 						try {
 							return clazz.getConstructor(ProxyServer.class).newInstance(proxy);
 						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-							e.printStackTrace();
-							return null;
+							try {
+								return clazz.newInstance();
+							} catch (InstantiationException | IllegalAccessException e1) {
+								e.printStackTrace();
+								return null;
+							}
 						}
 					})
 					.filter(handler -> handler != null)
