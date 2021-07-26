@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -52,7 +53,7 @@ public class GeneralSetup {
 		server.registerHandlers(new Handler(Packets.API.getPacketId()) {
 
 			@Override
-			public JsonObject handle(InetAddress address, int port, JsonObject json) {
+			public JsonObject handle(InetSocketAddress address, JsonObject json) {
 				JsonObject returning = new JsonObject();
 				assertNotNull(json);
 				assertTrue(json.has("test"));
@@ -79,7 +80,7 @@ public class GeneralSetup {
 
 		});
 		assertEquals(returned, "Returning!");
-		assertTrue(Utils.isPortTaken(server.getPort()));
+		assertTrue(Utils.isPortTaken(server.getAddress().getPort()));
 		server.shutdown();
 	}
 

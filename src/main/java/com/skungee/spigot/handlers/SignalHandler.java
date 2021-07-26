@@ -1,6 +1,6 @@
 package com.skungee.spigot.handlers;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 import org.bukkit.Bukkit;
 
@@ -17,7 +17,7 @@ public class SignalHandler extends Executor {
 	}
 
 	@Override
-	public void execute(InetAddress address, int port, JsonObject object) {
+	public void execute(InetSocketAddress address, JsonObject object) {
 		if (!object.has("strings"))
 			return;
 		String[] strings = Streams.stream(object.get("strings").getAsJsonArray())

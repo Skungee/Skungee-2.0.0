@@ -104,7 +104,7 @@ public class VelocitySkungee implements ProxyPlatform {
 	public void onProxyInitialization(ProxyInitializeEvent event) {
 		variableManager = new VariableManager(this);
 		try {
-			japson = new JapsonServer(configuration.getBindAddress(), configuration.getPort());
+			japson = new JapsonServer(configuration.getBindAddress());
 			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.velocity.handlers")
 					.getSubTypesOf(Handler.class).stream()
 					.filter(clazz -> clazz != Executor.class)
@@ -137,22 +137,22 @@ public class VelocitySkungee implements ProxyPlatform {
 			japson.registerListener(new Listener() {
 				@Override
 				public void onAcquiredCommunication(JapsonConnection connection) {
-					getSelf().debugMessage("Connection acquired " + connection.getAddress().getHostAddress());
+					getSelf().debugMessage("Connection acquired " + connection.getAddress().toString());
 				}
 
 				@Override
 				public void onDisconnect(JapsonConnection connection) {
-					getSelf().debugMessage("Connection disconnected " + connection.getAddress().getHostAddress());
+					getSelf().debugMessage("Connection disconnected " + connection.getAddress().toString());
 				}
 
 				@Override
 				public void onForget(JapsonConnection connection) {
-					getSelf().debugMessage("Connection forgotten " + connection.getAddress().getHostAddress());
+					getSelf().debugMessage("Connection forgotten " + connection.getAddress().toString());
 				}
 
 				@Override
 				public void onReacquiredCommunication(JapsonConnection connection) {
-					getSelf().debugMessage("Connection reestablished " + connection.getAddress().getHostAddress());
+					getSelf().debugMessage("Connection reestablished " + connection.getAddress().toString());
 				}
 
 				@Override
@@ -160,7 +160,7 @@ public class VelocitySkungee implements ProxyPlatform {
 
 				@Override
 				public void onUnresponsive(JapsonConnection connection) {
-					getSelf().debugMessage("Connection unresponsive " + connection.getAddress().getHostAddress());
+					getSelf().debugMessage("Connection unresponsive " + connection.getAddress().toString());
 				}
 
 				@Override
@@ -228,8 +228,7 @@ public class VelocitySkungee implements ProxyPlatform {
 		if (!dataOptional.isPresent())
 			return Optional.empty();
 		ServerData data = dataOptional.get();
-		InetSocketAddress japsonAddress = data.getJapsonAddress();
-		boolean online = japson.getConnections().getConnection(japsonAddress.getAddress(), japsonAddress.getPort()).isPresent();
+		boolean online = japson.getConnections().getConnection(data.getJapsonAddress()).isPresent();
 		return Optional.of(new SkungeeServer(info.getName(), online, data));
 	}
 

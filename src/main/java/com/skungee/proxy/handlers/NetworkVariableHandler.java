@@ -1,6 +1,6 @@
 package com.skungee.proxy.handlers;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public class NetworkVariableHandler extends Handler {
 	}
 
 	@Override
-	public JsonObject handle(InetAddress address, int port, JsonObject object) {
+	public JsonObject handle(InetSocketAddress address, JsonObject object) {
 		JsonObject returning = new JsonObject();
 		ProxyPlatform platform = ProxySkungee.getPlatform();
 		SkungeeStorage storage = platform.getVariableManager().getMainStorage();

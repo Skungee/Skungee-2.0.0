@@ -1,6 +1,6 @@
 package com.skungee.bungeecord.handlers;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class MessageHandler extends Handler {
 	}
 
 	@Override
-	public JsonObject handle(InetAddress address, int port, JsonObject object) {
+	public JsonObject handle(InetSocketAddress address, JsonObject object) {
 		if (!object.has("strings") || !object.has("players"))
 			return null;
 		ProxyServer proxy = ProxyServer.getInstance();

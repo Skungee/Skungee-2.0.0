@@ -85,7 +85,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			return;
 		}
 		try {
-			japson = new JapsonServer(configuration.getBindAddress(), configuration.getPort());
+			japson = new JapsonServer(configuration.getBindAddress());
 			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.bungeecord.handlers")
 					.getSubTypesOf(Handler.class).stream().filter(clazz -> clazz != Executor.class).map(clazz -> {
 						try {
@@ -109,22 +109,24 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			japson.registerListener(new Listener() {
 				@Override
 				public void onAcquiredCommunication(JapsonConnection connection) {
-					instance.debugMessage("Connection acquired " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					instance.debugMessage("Connection acquired " + connection.getAddress().toString());
 				}
 
 				@Override
 				public void onDisconnect(JapsonConnection connection) {
-					instance.debugMessage("Connection disconnected " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					instance.debugMessage("Connection disconnected " + connection.getAddress().toString());
+//					Optional<InetSocketAddress> spigotServer = ServerDataManager.getServerDataMap().entrySet().stream().filter(entry -> entry.getValue().getJapsonAddress())
+//					CancellationsHandler.clear(connection.get)
 				}
 
 				@Override
 				public void onForget(JapsonConnection connection) {
-					instance.debugMessage("Connection forgotten " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					instance.debugMessage("Connection forgotten " + connection.getAddress().toString());
 				}
 
 				@Override
 				public void onReacquiredCommunication(JapsonConnection connection) {
-					instance.debugMessage("Connection reestablished " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					instance.debugMessage("Connection reestablished " + connection.getAddress().toString());
 				}
 
 				@Override
@@ -132,7 +134,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 
 				@Override
 				public void onUnresponsive(JapsonConnection connection) {
-					instance.debugMessage("Connection unresponsive " + connection.getAddress().getHostAddress() + ":" + connection.getPort());
+					instance.debugMessage("Connection unresponsive " + connection.getAddress().toString());
 				}
 
 				@Override
@@ -142,7 +144,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			e.printStackTrace();
 		}
 		variableManager = new VariableManager(this);
-		consoleMessage("Started on " + japson.getAddress().getHostAddress() + ":" + configuration.getPort());
+		consoleMessage("Started on " + japson.getAddress().toString());
 	}
 
 	@Override
@@ -202,8 +204,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		if (!dataOptional.isPresent())
 			return Optional.empty();
 		ServerData data = dataOptional.get();
-		InetSocketAddress japsonAddress = data.getJapsonAddress();
-		boolean online = japson.getConnections().getConnection(japsonAddress.getAddress(), japsonAddress.getPort()).isPresent();
+		boolean online = japson.getConnections().getConnection(data.getJapsonAddress()).isPresent();
 		return Optional.of(new SkungeeServer(info.getName(), online, data));
 	}
 

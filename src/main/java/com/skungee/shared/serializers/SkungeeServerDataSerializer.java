@@ -54,8 +54,8 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 				.map(string -> UUID.fromString(string))
 				.filter(uuid -> uuid != null)
 				.collect(Collectors.toSet()));
-		if (object.has("receiver-port"))
-			data.setReceiverPort(object.get("receiver-port").getAsInt());
+		if (object.has("receiver-port") && object.has("receiver-address"))
+			data.setReceiverAddress(InetSocketAddress.createUnresolved(object.get("receiver-address").getAsString(), object.get("receiver-port").getAsInt()));
 
 		// Scripts
 		if (object.has("scripts")) {
@@ -86,8 +86,10 @@ public class SkungeeServerDataSerializer implements Serializer<ServerData> {
 		object.add("whitelisted", whitelisted);
 		object.addProperty("japson-address", data.getJapsonAddress().getHostName());
 		object.addProperty("japson-port", data.getJapsonAddress().getPort());
-		if (data.hasReceiver())
-			object.addProperty("receiver-port", data.getReceiverPort());
+		if (data.hasReceiver()) {
+			object.addProperty("receiver-port", data.getReceiverAddress().getPort());
+			object.addProperty("receiver-address", data.getReceiverAddress().getHostName());
+		}
 		JsonArray array = new JsonArray();
 		for (Entry<String, Collection<String>> entry : data.getScripts().asMap().entrySet()) {
 			JsonObject script = new JsonObject();

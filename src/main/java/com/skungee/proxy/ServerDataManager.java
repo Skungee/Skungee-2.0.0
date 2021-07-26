@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,11 +25,15 @@ import com.skungee.shared.objects.SkungeeServer;
 
 public class ServerDataManager {
 
-	private final Map<InetSocketAddress, ServerData> map = new HashMap<>();
+	private final static Map<InetSocketAddress, ServerData> map = new HashMap<>();
 	private final ProxyPlatform platform;
 
 	public ServerDataManager(ProxyPlatform platform) {
 		this.platform = platform;
+	}
+
+	public final static Map<InetSocketAddress, ServerData> getServerDataMap() {
+		return Collections.unmodifiableMap(map);
 	}
 
 	/**

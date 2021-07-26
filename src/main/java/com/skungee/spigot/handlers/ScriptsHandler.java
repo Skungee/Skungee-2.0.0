@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class ScriptsHandler extends Executor {
 	}
 
 	@Override
-	public void execute(InetAddress address, int port, JsonObject object) {
+	public void execute(InetSocketAddress address, JsonObject object) {
 		if (!object.has("scripts"))
 			return;
 		File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + File.separator + Skript.SCRIPTSFOLDER);

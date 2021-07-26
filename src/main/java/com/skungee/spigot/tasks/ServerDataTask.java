@@ -58,13 +58,13 @@ public class ServerDataTask implements Runnable {
 				public JsonObject toJson() {
 					JsonObject object = new JsonObject();
 					object.addProperty("japson-address", japson.getAddress().getHostName());
-					object.addProperty("japson-port", japson.getPort());
+					object.addProperty("japson-port", japson.getAddress().getPort());
 					object.addProperty("limit", Bukkit.getMaxPlayers());
 					object.addProperty("version", Bukkit.getVersion());
 					if (!Bukkit.getIp().isEmpty())
 						object.addProperty("address", Bukkit.getIp());
 					else
-						object.addProperty("address", SpigotSkungee.getInstance().getPlatformConfiguration().getBindAddress());
+						object.addProperty("address", SpigotSkungee.getInstance().getPlatformConfiguration().getBindAddress().getHostName());
 					object.addProperty("motd", Bukkit.getMotd());
 					object.addProperty("port", Bukkit.getPort());
 					JsonArray whitelisted = new JsonArray();
@@ -76,8 +76,10 @@ public class ServerDataTask implements Runnable {
 					JsonArray operators = new JsonArray();
 					Bukkit.getOperators().forEach(player -> operators.add(player.getUniqueId() + ""));
 					object.add("operators", operators);
-					instance.getReceiver().ifPresent(receiver -> object.addProperty("receiver-port", receiver.getPort()));
-
+					instance.getReceiver().ifPresent(receiver -> {
+						object.addProperty("receiver-port", receiver.getAddress().getPort());
+						object.addProperty("receiver-address", receiver.getAddress().getHostName());
+					});
 //					File scriptsFolder = new File(Skript.getInstance().getDataFolder().getAbsolutePath() + File.separator + Skript.SCRIPTSFOLDER);
 //					Multimap<String, String> map = getScripts(scriptsFolder);
 //					JsonArray array = new JsonArray();

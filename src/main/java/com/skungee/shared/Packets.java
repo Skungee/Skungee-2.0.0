@@ -22,11 +22,15 @@ public enum Packets {
 	 */
 	SERVER_DATA(0x08),
 	/**
+	 * Used internally to notify the Proxy to setup callbacks.
+	 */
+	CANCELLATION(0x09),
+	/**
 	 *  GLOBAL_SCRIPTS is exclusive for Proxy to Spigot.
 	 *  This sends scripts that need to be updated and reloaded.
 	 */
-	GLOBAL_SCRIPTS(0x09),
-	PROXY_PLAYER_COMMAND(0x10);
+	GLOBAL_SCRIPTS(0x10),
+	PROXY_PLAYER_COMMAND(0x11);
 
 	private final int id;
 

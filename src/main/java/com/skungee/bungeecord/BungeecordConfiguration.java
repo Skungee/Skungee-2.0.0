@@ -1,6 +1,7 @@
 package com.skungee.bungeecord;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,9 +16,10 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 
 	private final Set<InetAddress> whitelisted = new HashSet<>();
 	private final Set<Packets> ignored = new HashSet<>();
-	private final int PORT, INTERVAL, BUFFER_SIZE, VERSION;
+	private final int INTERVAL, BUFFER_SIZE, VERSION;
 	private final boolean DEBUG, BACKUPS, MESSAGES;
-	private final String STORAGE_TYPE, ADDRESS;
+	private final InetSocketAddress ADDRESS;
+	private final String STORAGE_TYPE;
 	private String CHARSET;
 
 	public BungeecordConfiguration(Configuration configuration, int version) {
@@ -51,9 +53,8 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 			CHARSET = "UTF-8";
 		BUFFER_SIZE = configuration.getInt("protocol.buffer-size", 1024);
 		VERSION = configuration.getInt("configuration-version", version);
-		ADDRESS = configuration.getString("bind-address", "127.0.0.1");
+		ADDRESS = InetSocketAddress.createUnresolved(configuration.getString("bind-address", "127.0.0.1"), configuration.getInt("port", 8000));
 		DEBUG = configuration.getBoolean("debug", false);
-		PORT = configuration.getInt("port", 8000);
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 	}
 
 	@Override
-	public String getBindAddress() {
+	public InetSocketAddress getBindAddress() {
 		return ADDRESS;
 	}
 
@@ -109,11 +110,6 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 	@Override
 	public boolean isDebug() {
 		return DEBUG;
-	}
-
-	@Override
-	public int getPort() {
-		return PORT;
 	}
 
 }

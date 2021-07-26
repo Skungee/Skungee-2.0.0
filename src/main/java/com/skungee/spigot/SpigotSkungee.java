@@ -2,9 +2,7 @@ package com.skungee.spigot;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,10 +20,8 @@ import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.shared.Platform;
 import com.skungee.shared.objects.SkungeePlayer;
-import com.skungee.spigot.SpigotConfiguration.ReceiverPorts;
 import com.skungee.spigot.objects.SkungeePlayerMapper;
 import com.skungee.spigot.tasks.ServerDataTask;
-import com.skungee.spigot.utils.Utils;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
@@ -35,6 +31,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 	private SpigotConfiguration configuration;
 	private static SpigotSkungee instance;
 	private JapsonServer receiver;
+	private ServerDataTask task;
 	private JapsonClient japson;
 	private SkriptAddon addon;
 	private Metrics metrics;
@@ -53,25 +50,19 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 		}
 		saveDefaultConfig();
 		configuration = new SpigotConfiguration(getConfig(), version);
-		try {
-			japson = new JapsonClient(configuration.getBindAddress(), configuration.getPort());
-			if (configuration.isDebug()) {
-				japson.enableDebug();
-				if (configuration.getIgnoredDebugPackets().length != 0)
-					japson.addIgnoreDebugPackets(configuration.getIgnoredDebugPackets());
-			}
-			japson.makeSureConnectionValid();
-			japson.setPacketBufferSize(configuration.getBufferSize());
-			japson.start();
-			consoleMessage("Started on " + InetAddress.getLocalHost().getHostAddress() + ":" + configuration.getPort());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+		japson = new JapsonClient(configuration.getBindAddress());
+		if (configuration.isDebug()) {
+			japson.enableDebug();
+			if (configuration.getIgnoredDebugPackets().length != 0)
+				japson.addIgnoreDebugPackets(configuration.getIgnoredDebugPackets());
 		}
+		japson.makeSureConnectionValid();
+		japson.setPacketBufferSize(configuration.getBufferSize());
+		japson.start();
+		consoleMessage("Started on " + configuration.getBindAddress().toString());
 		if (configuration.hasReceiver()) {
-			ReceiverPorts ports = configuration.getReceiverPorts();
-			int port = ports.isAutomatic() ? Utils.findPort(ports.getStartingPort(), ports.getEndingPort()) : ports.getPort();
 			try {
-				receiver = new JapsonServer(configuration.getBindAddress(), port);
+				receiver = new JapsonServer(configuration.getReceiverAddress());
 				if (configuration.isDebug())
 					receiver.enableDebug();
 				receiver.setPacketBufferSize(configuration.getBufferSize());
@@ -84,12 +75,13 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 								return null;
 							}
 						}).filter(handler -> handler != null).toArray(Handler[]::new));
-			} catch (UnknownHostException | SocketException e) {
+			} catch (SocketException e) {
 				e.printStackTrace();
 			}
 		}
 		metrics = new Metrics(this);
-		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new ServerDataTask(this, japson), 0, 60 * 20); // 1 minute.
+		task = new ServerDataTask(this, japson);
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, task, 0, 60 * 20); // 1 minute.
 		if (Bukkit.getPluginManager().isPluginEnabled("Skript")) {
 			try {
 				addon = Skript.registerAddon(this)

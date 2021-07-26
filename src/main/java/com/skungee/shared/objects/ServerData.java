@@ -14,9 +14,8 @@ public class ServerData {
 	private final Multimap<String, String> scripts = HashMultimap.create();
 	private final InetSocketAddress japsonAddress, serverAddress;
 	private Set<UUID> whitelisted = new HashSet<>();
-	private InetSocketAddress receiverAddress;
+	private InetSocketAddress receiver;
 	private String motd, version;
-	private Integer receiverPort;
 	private int limit;
 
 	public ServerData(InetSocketAddress serverAddress, InetSocketAddress japsonAddress) {
@@ -40,13 +39,10 @@ public class ServerData {
 		return japsonAddress;
 	}
 
-	public InetSocketAddress getReceiverAddress() throws IllegalAccessException {
+	public InetSocketAddress getReceiverAddress() throws IllegalStateException {
 		if (!hasReceiver())
-			throw new IllegalAccessException("The server data from address " + serverAddress.getHostName() + ":" + serverAddress.getPort() + " does not have a receiver!");
-		if (receiverAddress != null)
-			return receiverAddress;
-		receiverAddress = new InetSocketAddress(japsonAddress.getAddress(), receiverPort);
-		return receiverAddress;
+			throw new IllegalStateException("The server data from address " + serverAddress.getHostName() + ":" + serverAddress.getPort() + " does not have a receiver!");
+		return receiver;
 	}
 
 	public String getMotd() {
@@ -69,9 +65,8 @@ public class ServerData {
 		return whitelisted;
 	}
 
-	public void setReceiverPort(int receiverPort) {
-		this.receiverPort = receiverPort;
-		receiverAddress = null;
+	public void setReceiverAddress(InetSocketAddress receiver) {
+		this.receiver = receiver;
 	}
 
 	public void setMotd(String motd) {
@@ -79,11 +74,7 @@ public class ServerData {
 	}
 
 	public boolean hasReceiver() {
-		return receiverPort != null;
-	}
-
-	public int getReceiverPort() {
-		return receiverPort;
+		return receiver != null;
 	}
 
 	public String getVersion() {

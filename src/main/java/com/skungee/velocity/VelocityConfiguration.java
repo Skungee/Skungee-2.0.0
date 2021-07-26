@@ -1,6 +1,7 @@
 package com.skungee.velocity;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,9 +15,10 @@ public class VelocityConfiguration implements ProxyConfiguration {
 
 	private final Set<InetAddress> whitelisted = new HashSet<>();
 	private final Set<Packets> ignored = new HashSet<>();
-	private final int PORT, INTERVAL, BUFFER_SIZE, VERSION;
+	private final int INTERVAL, BUFFER_SIZE, VERSION;
 	private final boolean DEBUG, BACKUPS, MESSAGES;
-	private final String STORAGE_TYPE, ADDRESS;
+	private final InetSocketAddress ADDRESS;
+	private final String STORAGE_TYPE;
 	private String CHARSET;
 
 	public VelocityConfiguration(Toml configuration, long version) {
@@ -24,8 +26,7 @@ public class VelocityConfiguration implements ProxyConfiguration {
 		VERSION = configuration.getLong("configuration-version", version).intValue();
 
 		Toml configurations = configuration.getTable("configurations");
-		ADDRESS = configurations.getString("bind-address", "127.0.0.1");
-		PORT = configurations.getLong("port", 8000L).intValue();
+		ADDRESS = InetSocketAddress.createUnresolved(configurations.getString("bind-address", "127.0.0.1"), configurations.getLong("port", 8000L).intValue());
 		DEBUG = configurations.getBoolean("debug", false);
 		if (configurations.getList("ignored-packets") != null)
 			ignored.addAll(configurations.getList("ignored-packets").stream().map(object -> {
@@ -112,7 +113,7 @@ public class VelocityConfiguration implements ProxyConfiguration {
 	}
 
 	@Override
-	public String getBindAddress() {
+	public InetSocketAddress getBindAddress() {
 		return ADDRESS;
 	}
 
@@ -124,11 +125,6 @@ public class VelocityConfiguration implements ProxyConfiguration {
 	@Override
 	public boolean isDebug() {
 		return DEBUG;
-	}
-
-	@Override
-	public int getPort() {
-		return PORT;
 	}
 
 }

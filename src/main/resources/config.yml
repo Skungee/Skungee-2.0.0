@@ -33,6 +33,7 @@ protocol:
 receiver:
     # If this is disabled, some syntax may not work.
     enabled: true
+    bind-address: "127.0.0.1"
     # Define the ports to run on.
     ports:
         # Automatic will find any open ports and bind to it.

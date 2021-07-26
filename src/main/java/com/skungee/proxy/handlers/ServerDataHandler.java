@@ -1,6 +1,5 @@
 package com.skungee.proxy.handlers;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import com.sitrica.japson.gson.JsonObject;
@@ -23,7 +22,7 @@ public class ServerDataHandler extends Executor {
 	}
 
 	@Override
-	public void execute(InetAddress address, int port, JsonObject object) {
+	public void execute(InetSocketAddress address, JsonObject object) {
 		InetSocketAddress serverAddress = new InetSocketAddress(object.get("address").getAsString(), object.get("port").getAsInt());
 		ServerData data = serializer.deserialize(object, ServerData.class, null);
 		proxy.getServerDataManager().set(serverAddress, data);

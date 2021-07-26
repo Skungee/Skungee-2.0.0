@@ -1,6 +1,6 @@
 package com.skungee.velocity.handlers;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public class ConnectHandler extends Executor {
 	}
 
 	@Override
-	public void execute(InetAddress address, int port, JsonObject object) {
+	public void execute(InetSocketAddress address, JsonObject object) {
 		if (!object.has("server") || !object.has("players"))
 			return;
 		Optional<RegisteredServer> optional = proxy.getServer(object.get("server").getAsString());
