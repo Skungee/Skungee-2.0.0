@@ -1,30 +1,17 @@
 package com.skungee.proxy.handlers;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Executor;
+import com.skungee.proxy.ProxySkungee;
+import com.skungee.proxy.managers.EventManager;
 import com.skungee.shared.Packets;
 
 public class CancellationHandler extends Executor {
 
-	private final static Map<String, InetSocketAddress> cancellations = new HashMap<>();
-
 	public CancellationHandler() {
 		super(Packets.CANCELLATION.getPacketId());
-	}
-
-	public final static boolean isCancelled(String event, InetSocketAddress address) {
-		InetSocketAddress existing = cancellations.get(event);
-		if (existing == null)
-			return false;
-		return existing.equals(address);
-	}
-
-	public final static void clear(InetSocketAddress address) {
-		cancellations.entrySet().removeIf(entry -> entry.getValue().equals(address));
 	}
 
 	@Override
@@ -34,11 +21,12 @@ public class CancellationHandler extends Executor {
 		InetSocketAddress serverAddress = new InetSocketAddress(object.get("address").getAsString(), object.get("port").getAsInt());
 		String event = object.get("event").getAsString();
 		boolean cancel = object.get("cancel").getAsBoolean();
+		EventManager eventManager = ProxySkungee.getPlatform().getEventManager();
 		if (!cancel) {
-			cancellations.remove(event, serverAddress);
+			eventManager.setCancelled(false, event, serverAddress);
 			return;
 		}
-		cancellations.put(event, serverAddress);
+		eventManager.setCancelled(true, event, serverAddress);
 	}
 
 }

@@ -22,6 +22,8 @@ public interface Platform {
 		consoleMessages(string);
 	}
 
+	public void debugMessages(Exception exception, String... strings);
+
 	public void debugMessages(String... strings);
 
 	public default void debugMessage(String string) {

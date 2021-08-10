@@ -30,8 +30,9 @@ import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ProxySkungee;
-import com.skungee.proxy.ServerDataManager;
 import com.skungee.proxy.SkungeeAPI;
+import com.skungee.proxy.managers.EventManager;
+import com.skungee.proxy.managers.ServerDataManager;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.objects.ServerData;
@@ -58,6 +59,7 @@ public class VelocitySkungee implements ProxyPlatform {
 	private final ServerDataManager serverDataManager;
 	private final File dataFolder, SCRIPTS_FOLDER;
 	private VariableManager variableManager;
+	private EventManager eventManager;
 	private final ProxyServer proxy;
 	private final SkungeeAPI API;
 	private final Logger logger;
@@ -68,6 +70,7 @@ public class VelocitySkungee implements ProxyPlatform {
 		this.proxy = proxy;
 		this.logger = logger;
 		serverDataManager = new ServerDataManager(this);
+		eventManager = new EventManager(this);
 		API = new SkungeeAPI(this);
 		dataFolder = path.toFile();
 		SCRIPTS_FOLDER = new File(dataFolder, File.separator + "scripts");
@@ -197,6 +200,15 @@ public class VelocitySkungee implements ProxyPlatform {
 			logger.debug(message);
 	}
 
+	@Override
+	public void debugMessages(Exception exception, String... strings) {
+		if (!configuration.isDebug())
+			return;
+		for (String string : strings)
+			consoleMessage("&b" + string);
+		exception.printStackTrace();
+	}
+
 	public SkungeeAPI getAPI() {
 		return API;
 	}
@@ -307,6 +319,11 @@ public class VelocitySkungee implements ProxyPlatform {
 	@Override
 	public VariableManager getVariableManager() {
 		return variableManager;
+	}
+
+	@Override
+	public EventManager getEventManager() {
+		return eventManager;
 	}
 
 	@Override

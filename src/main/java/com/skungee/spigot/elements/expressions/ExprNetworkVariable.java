@@ -66,7 +66,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 	@Nullable
 	protected Object[] get(Event event) {
 		SpigotSkungee instance = SpigotSkungee.getInstance();
-		List<NetworkVariable> variables = new ArrayList<>();;
+		List<NetworkVariable> variables = new ArrayList<>();
 		try {
 			NetworkVariablePacket packet = new NetworkVariablePacket(new NetworkVariable[0])
 					.setNames(variable.getName().toString(event));

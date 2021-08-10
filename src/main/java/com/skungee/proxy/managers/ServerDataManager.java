@@ -1,4 +1,4 @@
-package com.skungee.proxy;
+package com.skungee.proxy.managers;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +19,8 @@ import com.google.common.collect.Multimap;
 import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Packet;
+import com.skungee.proxy.ProxyPlatform;
+import com.skungee.proxy.ProxySkungee;
 import com.skungee.shared.Packets;
 import com.skungee.shared.objects.ServerData;
 import com.skungee.shared.objects.SkungeeServer;

@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.sitrica.japson.server.JapsonServer;
 import com.sitrica.japson.shared.Handler;
+import com.skungee.proxy.managers.EventManager;
+import com.skungee.proxy.managers.ServerDataManager;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Platform;
 import com.skungee.shared.objects.SkungeeServer;
@@ -33,6 +35,8 @@ public interface ProxyPlatform extends Platform {
 	public VariableManager getVariableManager();
 
 	public Set<SkungeeServer> getServers();
+
+	public EventManager getEventManager();
 
 	public JapsonServer getJapsonServer();
 

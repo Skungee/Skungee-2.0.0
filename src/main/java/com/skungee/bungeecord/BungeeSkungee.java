@@ -25,8 +25,9 @@ import com.sitrica.japson.shared.Executor;
 import com.sitrica.japson.shared.Handler;
 import com.skungee.proxy.ProxyPlatform;
 import com.skungee.proxy.ProxySkungee;
-import com.skungee.proxy.ServerDataManager;
 import com.skungee.proxy.SkungeeAPI;
+import com.skungee.proxy.managers.EventManager;
+import com.skungee.proxy.managers.ServerDataManager;
 import com.skungee.proxy.variables.VariableManager;
 import com.skungee.shared.Packets;
 import com.skungee.shared.objects.ServerData;
@@ -48,6 +49,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	private ServerDataManager serverDataManager;
 	private VariableManager variableManager;
 	private static BungeeSkungee instance;
+	private EventManager eventManager;
 	private JapsonServer japson;
 	private File SCRIPTS_FOLDER;
 	private SkungeeAPI API;
@@ -62,6 +64,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			e.printStackTrace();
 		}
 		serverDataManager = new ServerDataManager(this);
+		eventManager = new EventManager(this);
 		API = new SkungeeAPI(this);
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
@@ -179,6 +182,15 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	}
 
 	@Override
+	public void debugMessages(Exception exception, String... strings) {
+		if (!configuration.isDebug())
+			return;
+		for (String string : strings)
+			consoleMessage("&b" + string);
+		exception.printStackTrace();
+	}
+
+	@Override
 	public Optional<SkungeeServer> getServer(InetSocketAddress address) {
 		Optional<ServerInfo> info = getProxy().getServers().values().stream()
 				.filter(server -> server.getSocketAddress().equals(address))
@@ -276,6 +288,11 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	@Override
 	public VariableManager getVariableManager() {
 		return variableManager;
+	}
+
+	@Override
+	public EventManager getEventManager() {
+		return eventManager;
 	}
 
 	@Override

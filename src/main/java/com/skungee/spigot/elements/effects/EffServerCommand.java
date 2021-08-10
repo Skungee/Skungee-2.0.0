@@ -10,7 +10,7 @@ import com.sitrica.japson.gson.JsonArray;
 import com.sitrica.japson.gson.JsonObject;
 import com.sitrica.japson.shared.Packet;
 import com.skungee.shared.Packets;
-import com.skungee.shared.objects.SkungeePlayer;
+import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.SpigotSkungee;
 
 import ch.njol.skript.Skript;
@@ -19,34 +19,34 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-public class EffBungeePlayerCommand extends Effect {
+public class EffServerCommand extends Effect {
 
 	static {
-		Skript.registerEffect(EffBungeePlayerCommand.class, "execute [[prox(ied|y)] players] %skungeeplayers% command %strings%", "make [[prox(ied|y)] players] %skungeeplayers% (say|chat) %strings%");
+		Skript.registerEffect(EffServerCommand.class, "execute command %strings% on %skungeeservers%");
 	}
 
-	private Expression<SkungeePlayer> players;
+	private Expression<SkungeeServer> servers;
 	private Expression<String> commands;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		players = (Expression<SkungeePlayer>) exprs[0];
-		commands = (Expression<String>) exprs[1];
+		commands = (Expression<String>) exprs[0];
+		servers = (Expression<SkungeeServer>) exprs[1];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
 		try {
-			SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.PROXY_PLAYER_COMMAND.getPacketId()) {
+			SpigotSkungee.getInstance().getJapsonClient().sendPacket(new Packet(Packets.SERVER_COMMAND.getPacketId()) {
 				@Override
 				public JsonObject toJson() {
 					JsonObject object = new JsonObject();
-					JsonArray playersArray = new JsonArray();
-					for (SkungeePlayer player : players.getArray(event))
-						playersArray.add(player.getUniqueId() + "");
-					object.add("players", playersArray);
+					JsonArray serversArray = new JsonArray();
+					for (SkungeeServer server : servers.getArray(event))
+						serversArray.add(server.getName());
+					object.add("servers", serversArray);
 					JsonArray commandsArray = new JsonArray();
 					for (String command : commands.getArray(event))
 						commandsArray.add(command);
@@ -62,8 +62,8 @@ public class EffBungeePlayerCommand extends Effect {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		if (debug)
-			return "execute player command";
-		return "execute players " + players.toString(event, debug) + " commands " + commands.toString(event, debug);
+			return "execute command on servers";
+		return "execute commands " + commands.toString(event, debug) + " on servers " + servers.toString(event, debug);
 	}
 
 }

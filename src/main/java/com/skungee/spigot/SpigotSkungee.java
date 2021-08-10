@@ -147,6 +147,15 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 	}
 
 	@Override
+	public void debugMessages(Exception exception, String... strings) {
+		if (!configuration.isDebug())
+			return;
+		for (String string : strings)
+			consoleMessage("&b" + string);
+		exception.printStackTrace();
+	}
+
+	@Override
 	public SpigotConfiguration getPlatformConfiguration() {
 		return configuration;
 	}
