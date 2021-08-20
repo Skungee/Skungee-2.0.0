@@ -15,15 +15,23 @@ import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.SpigotSkungee;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
+@Name("Connect Player To Server")
+@Description("Send a player to another server on the proxy.")
+@Examples({"connect all proxied players on server \"Hub\" to server \"Skyblock\"", "connect player to server \"Hub\""})
+@Since("2.0.0")
 public class EffConnect extends Effect {
 
 	static {
-		Skript.registerEffect(EffConnect.class, "(connect|send) [[prox(ied|y)] players] %skungeeplayers% to [proxy] [server] %skungeeserver%");
+		Skript.registerEffect(EffConnect.class, "(connect|send) [[prox(ied|y)] players] %skungeeplayers% to [proxy] %skungeeserver%");
 	}
 
 	private Expression<SkungeePlayer> players;

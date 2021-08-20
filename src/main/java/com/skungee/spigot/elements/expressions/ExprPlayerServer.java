@@ -8,8 +8,14 @@ import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.managers.ServerManager;
 
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
+@Name("Player Server")
+@Description("Grabs the name of the server the defined players are on.")
+@Since("2.0.0")
 public class ExprPlayerServer extends SimplePropertyExpression<SkungeePlayer, SkungeeServer> {
 
 	static {

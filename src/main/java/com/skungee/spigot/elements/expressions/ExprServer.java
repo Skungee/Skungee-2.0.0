@@ -9,16 +9,22 @@ import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.objects.SkungeeServerMapper;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
+@Name("Server")
+@Description("Grab a server by name or none if not present.")
+@Since("2.0.0")
 public class ExprServer extends SimpleExpression<SkungeeServer> {
 
 	static {
-		Skript.registerExpression(ExprServer.class, SkungeeServer.class, ExpressionType.SIMPLE, "[proxy] server %strings%");
+		Skript.registerExpression(ExprServer.class, SkungeeServer.class, ExpressionType.SIMPLE, "[proxy] server[s] %strings%");
 	}
 
 	private Expression<String> names;

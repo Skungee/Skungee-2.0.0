@@ -7,12 +7,18 @@ import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.managers.ServerManager;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
+@Name("Proxy Servers")
+@Description("Grab all the proxy servers.")
+@Since("2.0.0")
 public class ExprProxyServers extends SimpleExpression<SkungeeServer> {
 
 	static {

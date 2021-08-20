@@ -10,7 +10,6 @@ import com.skungee.spigot.events.PreLoginEvent;
 import com.skungee.spigot.lang.AdvancedReadingSkriptEvent;
 import com.skungee.spigot.packets.CancellationPacket;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -19,7 +18,7 @@ public class EvtSimpleCancellationEvents extends AdvancedReadingSkriptEvent {
 
 	public EvtSimpleCancellationEvents() {
 		super(false, PreLoginEvent.class);
-		Skript.registerEvent("pre login", EvtSimpleCancellationEvents.class, PreLoginEvent.class, "player pre(-| )login");
+		//Skript.registerEvent("pre login", EvtSimpleCancellationEvents.class, PreLoginEvent.class, "player pre(-| )login");
 	}
 
 	@Override

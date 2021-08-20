@@ -14,11 +14,19 @@ import com.skungee.shared.objects.SkungeeServer;
 import com.skungee.spigot.SpigotSkungee;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
+@Name("Signal")
+@Description("Send a signal to another server. Signals act like a messaging system to talk between servers. Use the signal event to listen to the signal for the other servers.")
+@Examples("send signal message \"START Skywars\" to server \"Skyblock\"")
+@Since("2.0.0")
 public class EffSignal extends Effect {
 
 	static {

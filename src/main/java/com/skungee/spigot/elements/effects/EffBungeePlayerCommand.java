@@ -14,11 +14,17 @@ import com.skungee.shared.objects.SkungeePlayer;
 import com.skungee.spigot.SpigotSkungee;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
+@Name("Bungee Player Command")
+@Description("Force a player to chat or execute a command, add a slash / to make it a command.")
+@Since("2.0.0")
 public class EffBungeePlayerCommand extends Effect {
 
 	static {
