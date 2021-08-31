@@ -38,12 +38,12 @@ public class SpigotConfiguration implements PlatformConfiguration {
 		if (configuration.getBoolean("receiver.enabled", true)) {
 			ReceiverPorts ports = new ReceiverPorts(configuration.getConfigurationSection("receiver.ports"));
 			int port = ports.isAutomatic() ? Utils.findPort(ports.getStartingPort(), ports.getEndingPort()) : ports.getPort();
-			RECEIVER = InetSocketAddress.createUnresolved(configuration.getString("receiver.bind-address"), port);
+			RECEIVER = new InetSocketAddress(configuration.getString("receiver.bind-address"), port);
 		}
 		CHARSET = configuration.getString("global-scripts.charset", "default");
 		VERSION = configuration.getInt("configuration-version", version);
 		BUFFER_SIZE = configuration.getInt("protocol.buffer-size", 1024);
-		ADDRESS = InetSocketAddress.createUnresolved(configuration.getString("bind-address", "127.0.0.1"), configuration.getInt("port", 8000));
+		ADDRESS = new InetSocketAddress(configuration.getString("bind-address", "127.0.0.1"), configuration.getInt("port", 8000));
 		DEBUG = configuration.getBoolean("debug", false);
 	}
 

@@ -26,7 +26,7 @@ public class VelocityConfiguration implements ProxyConfiguration {
 		VERSION = configuration.getLong("configuration-version", version).intValue();
 
 		Toml configurations = configuration.getTable("configurations");
-		ADDRESS = InetSocketAddress.createUnresolved(configurations.getString("bind-address", "127.0.0.1"), configurations.getLong("port", 8000L).intValue());
+		ADDRESS = new InetSocketAddress(configurations.getString("bind-address", "127.0.0.1"), configurations.getLong("port", 8000L).intValue());
 		DEBUG = configurations.getBoolean("debug", false);
 		if (configurations.getList("ignored-packets") != null)
 			ignored.addAll(configurations.getList("ignored-packets").stream().map(object -> {

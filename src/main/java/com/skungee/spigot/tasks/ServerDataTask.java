@@ -97,7 +97,7 @@ public class ServerDataTask implements Runnable {
 				}
 			});
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			e.printStackTrace();
+			instance.debugMessages(e, "Failed to send server data task to proxy. Proxy is probably offline");
 		}
 	}
 

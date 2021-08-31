@@ -53,7 +53,7 @@ public class BungeecordConfiguration implements ProxyConfiguration {
 			CHARSET = "UTF-8";
 		BUFFER_SIZE = configuration.getInt("protocol.buffer-size", 1024);
 		VERSION = configuration.getInt("configuration-version", version);
-		ADDRESS = InetSocketAddress.createUnresolved(configuration.getString("bind-address", "127.0.0.1"), configuration.getInt("port", 8000));
+		ADDRESS = new InetSocketAddress(configuration.getString("bind-address", "127.0.0.1"), configuration.getInt("port", 8000));
 		DEBUG = configuration.getBoolean("debug", false);
 	}
 
