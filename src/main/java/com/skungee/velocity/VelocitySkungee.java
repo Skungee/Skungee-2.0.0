@@ -71,7 +71,6 @@ public class VelocitySkungee implements ProxyPlatform {
 		this.logger = logger;
 		serverDataManager = new ServerDataManager(this);
 		eventManager = new EventManager(this);
-		API = new SkungeeAPI(this);
 		dataFolder = path.toFile();
 		SCRIPTS_FOLDER = new File(dataFolder, File.separator + "scripts");
 		if (!SCRIPTS_FOLDER.exists())
@@ -96,6 +95,7 @@ public class VelocitySkungee implements ProxyPlatform {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+		API = new SkungeeAPI(this);
 		logger.info("Skungee has been enabled!");
 	}
 

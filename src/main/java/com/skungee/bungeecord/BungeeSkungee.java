@@ -65,7 +65,6 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		}
 		serverDataManager = new ServerDataManager(this);
 		eventManager = new EventManager(this);
-		API = new SkungeeAPI(this);
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
 		SCRIPTS_FOLDER = new File(getDataFolder(), File.separator + "scripts");
@@ -146,6 +145,7 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
+		API = new SkungeeAPI(this);
 		variableManager = new VariableManager(this);
 		consoleMessage("Started on " + japson.getAddress().toString());
 	}
@@ -231,15 +231,15 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 
 	@Override
 	public Optional<SkungeePlayer> getPlayer(String name) {
-		ProxiedPlayer player = getProxy().getPlayer(name);
-		if (player == null)
-			return Optional.empty();
-		return Optional.of(new SkungeePlayer(player.getName(), player.getUniqueId(), getCurrentServer(player.getUniqueId())));
+		return getPlayer(getProxy().getPlayer(name));
 	}
 
 	@Override
 	public Optional<SkungeePlayer> getPlayer(UUID uuid) {
-		ProxiedPlayer player = getProxy().getPlayer(uuid);
+		return getPlayer(getProxy().getPlayer(uuid));
+	}
+
+	public Optional<SkungeePlayer> getPlayer(ProxiedPlayer player) {
 		if (player == null)
 			return Optional.empty();
 		return Optional.of(new SkungeePlayer(player.getName(), player.getUniqueId(), getCurrentServer(player.getUniqueId())));

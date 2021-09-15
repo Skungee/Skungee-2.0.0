@@ -40,7 +40,6 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 	@Override
 	public void onEnable() {
 		instance = this;
-		API = new SkungeeAPI(this);
 		File configFile = new File(getDataFolder(), "config.yml");
 		//If newer version was found, update configuration.
 		int version = 2;
@@ -91,6 +90,7 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 				e.printStackTrace();
 			}
 		}
+		API = new SkungeeAPI(this);
 		consoleMessage("has been enabled!");
 	}
 
