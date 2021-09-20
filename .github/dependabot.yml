@@ -1,20 +1,7 @@
 version: 2
-registries:
-  git-github-com:
-    type: git
-    url: https://github.com
-    username: x-access-token
-    password: "${{secrets.GIT_GITHUB_COM_PASSWORD}}"
-
 updates:
 - package-ecosystem: gradle
   directory: "/"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: com.github.johnrengelman.shadow
-    versions:
-    - 6.1.0
-  registries:
-  - git-github-com
