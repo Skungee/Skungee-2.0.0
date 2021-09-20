@@ -59,7 +59,7 @@ dependencies {
 	implementation (group: 'net.md-5', name: 'bungeecord-api', version: '1.17-R0.1-SNAPSHOT')
 
 	// Skript
-	implementation (group: 'com.github.SkriptLang.Skript', name: 'Skript', version: '2.6-alpha1') {
+	implementation (group: 'com.github.SkriptLang.Skript', name: 'Skript', version: '2.6-beta3') {
 		transitive = false
 	}
 
