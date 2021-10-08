@@ -67,7 +67,7 @@ dependencies {
 	implementation (group: 'com.moandjiezana.toml', name: 'toml4j', version: '0.7.2')
 
 	// Reflections
-	shadow (group: 'org.reflections', name: 'reflections', version: '0.9.12')
+	shadow (group: 'org.reflections', name: 'reflections', version: '0.10.1')
 
 	// Japson
 	shadow (group: 'com.sitrica', name: 'japson-beta', version: '1.1.4.0-SNAPSHOT')
