@@ -195,6 +195,11 @@ public class VelocitySkungee implements ProxyPlatform {
 	}
 
 	@Override
+	public void debugMessage(Exception exception, String... strings) {
+		debugMessages(exception, strings);
+	}
+
+	@Override
 	public void debugMessages(String... messages) {
 		for (String message : messages)
 			logger.debug(message);

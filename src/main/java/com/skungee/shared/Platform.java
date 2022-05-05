@@ -24,6 +24,8 @@ public interface Platform {
 
 	public void debugMessages(Exception exception, String... strings);
 
+	public void debugMessage(Exception exception, String... strings);
+
 	public void debugMessages(String... strings);
 
 	public default void debugMessage(String string) {

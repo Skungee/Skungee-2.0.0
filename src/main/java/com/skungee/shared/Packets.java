@@ -3,45 +3,45 @@ package com.skungee.shared;
 public enum Packets {
 
 	/*
-	 *  0x00 is for Japson's heartbeats internally.
+	 *  0 is for Japson's heartbeats internally.
 	 */
-	HEARTBEAT(0x00),
+	HEARTBEAT(0),
 	/**
 	 * Reserved for API requests.
 	 */
-	API(0x01),
-	EVENT(0x02),
-	SIGNAL(0x03),
-	PLAYERS(0x04),
-	SERVERS(0x05),
-	CONNECT(0x06),
-	MESSAGE(0x07),
-	ACTIONBAR(0x8),
-	VARIABLES(0x09),
+	API(1),
+	EVENT(2),
+	SIGNAL(3),
+	PLAYERS(4),
+	SERVERS(5),
+	CONNECT(6),
+	MESSAGE(7),
+	ACTIONBAR(8),
+	VARIABLES(9),
 	/**
 	 *  SERVER_DATA is exclusive for Spigot to Proxy.
 	 *  This packet sends server data like whitelisted players, max players, etc, in a packet to the proxy.
 	 */
-	SERVER_DATA(0x10),
+	SERVER_DATA(10),
 	/**
 	 * Used internally to notify the Proxy to setup callbacks.
 	 */
-	CANCELLATION(0x11),
-	SERVER_COMMAND(0x12),
+	CANCELLATION(11),
+	SERVER_COMMAND(12),
 	/**
 	 *  GLOBAL_SCRIPTS is exclusive for Proxy to Spigot.
 	 *  This sends scripts that need to be updated and reloaded.
 	 */
-	GLOBAL_SCRIPTS(0x13),
-	PROXY_PLAYER_COMMAND(0x14);
+	GLOBAL_SCRIPTS(13),
+	PROXY_PLAYER_COMMAND(14);
 
-	private final int id;
+	private final byte id;
 
 	private Packets(int id) {
-		this.id = id;
+		this.id = (byte) id;
 	}
 
-	public int getPacketId() {
+	public byte getPacketId() {
 		return id;
 	}
 

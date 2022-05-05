@@ -174,6 +174,11 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			ProxyServer.getInstance().getLogger().info(ChatColor.translateAlternateColorCodes('&', "&7[&6Skungee&7] " + string));
 	}
 
+	@Override
+	public void debugMessage(Exception exception, String... strings) {
+		debugMessages(exception, strings);
+	}
+
 	public void debugMessages(String... strings) {
 		if (!configuration.isDebug())
 			return;
