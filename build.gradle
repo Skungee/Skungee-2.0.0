@@ -36,11 +36,7 @@ repositories {
 	}
 
 	maven {
-		url 'https://maven.pkg.github.com/Sitrica/Japson/'
-		credentials {
-            username = "Sitrica"
-            password = System.getenv("GITHUB_TOKEN")
-        }
+		url 'https://maven.pkg.github.com/Sitrica/Japson'
 	}
 
 }
