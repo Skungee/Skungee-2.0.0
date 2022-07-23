@@ -69,7 +69,7 @@ dependencies {
 	// Toml for Velocity
 	implementation (group: 'com.moandjiezana.toml', name: 'toml4j', version: '0.7.2')
 
-	shadow group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+	shadow group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
 	// Reflections
 	shadow (group: 'org.reflections', name: 'reflections', version: '0.9.12')
