@@ -50,12 +50,6 @@ public class Types {
 					public String toVariableNameString(SkungeeServer server) {
 						return server.getName();
 					}
-
-					@Override
-					public String getVariableNamePattern() {
-						return "\\S+";
-					}
-
 				}));
 		Classes.registerClass(new ClassInfo<>(SkungeePlayer.class, "skungeeplayer")
 				.user("skungeeplayers?")
@@ -83,12 +77,6 @@ public class Types {
 					public String toVariableNameString(SkungeePlayer player) {
 						return player.getName();
 					}
-
-					@Override
-					public String getVariableNamePattern() {
-						return "\\S+";
-					}
-
 				}));
 	}
 

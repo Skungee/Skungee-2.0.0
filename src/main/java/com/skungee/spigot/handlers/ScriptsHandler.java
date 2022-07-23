@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 
 import com.sitrica.japson.gson.JsonArray;
@@ -46,7 +45,7 @@ public class ScriptsHandler extends Executor {
 			try {
 				file = File.createTempFile("Skungee", name);
 				PrintStream out = new PrintStream(new FileOutputStream(file));
-				out.print(StringUtils.join(lines.toArray(new String[lines.size()]), '\n'));
+				out.print(String.join("\n", lines.toArray(new String[lines.size()])));
 				out.close();
 				Optional<File> existing = Stream.of(scriptsFolder.listFiles(new FilenameFilter() {
 					@Override
