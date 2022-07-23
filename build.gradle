@@ -7,8 +7,6 @@ plugins {
 	id 'java'
 }
 
-jar.archiveName = project.name + '.jar'
-
 repositories {
 	mavenCentral()
 
