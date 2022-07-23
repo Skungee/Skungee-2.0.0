@@ -54,7 +54,7 @@ dependencies {
 
 	// Bungeecord
 	implementation (group: 'net.md-5', name: 'bungeecord-protocol', version: '1.17-R0.1-SNAPSHOT')
-	implementation (group: 'net.md-5', name: 'bungeecord-api', version: '1.17-R0.1-SNAPSHOT')
+	implementation (group: 'net.md-5', name: 'bungeecord-api', version: '1.19-R0.1-SNAPSHOT')
 
 	// Skript
 	implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.6.3') {
