@@ -57,8 +57,8 @@ dependencies {
 	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.19-R0.1-SNAPSHOT')
 
 	// Bungeecord
-	implementation (group: 'net.md-5', name: 'bungeecord-protocol', version: '1.17-R0.1-SNAPSHOT')
-	implementation (group: 'net.md-5', name: 'bungeecord-api', version: '1.17-R0.1-SNAPSHOT')
+	implementation (group: 'net.md-5', name: 'bungeecord-protocol', version: '1.19-R0.1-SNAPSHOT')
+	implementation (group: 'net.md-5', name: 'bungeecord-api', version: '1.19-R0.1-SNAPSHOT')
 
 	// Skript
 	implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.6.3') {
@@ -83,8 +83,8 @@ dependencies {
 	testImplementation (group: 'com.github.Sitrica', name: 'Japson', version: '1.1.4')
 	//shadow (group: 'com.sitrica', name: 'japson-beta', version: '1.1.4.0-SNAPSHOT')
 
-	testRuntimeOnly (group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.1')
-	testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1')
+	testRuntimeOnly (group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.2')
+	testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2')
 	testImplementation (group: 'org.reflections', name: 'reflections', version: '0.9.12')
 
 	shadow (group: 'org.json', name: 'json', version: '20210307')
