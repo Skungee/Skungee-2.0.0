@@ -38,10 +38,6 @@ repositories {
 		url 'https://jitpack.io'
 	}
 
-	maven {
-		url 'https://maven.pkg.github.com/Sitrica/Japson'
-	}
-
 }
 
 dependencies {
