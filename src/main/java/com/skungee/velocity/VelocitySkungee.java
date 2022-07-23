@@ -17,6 +17,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.bstats.charts.SimplePie;
+import org.bstats.velocity.Metrics;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 
@@ -58,6 +60,7 @@ public class VelocitySkungee implements ProxyPlatform {
 	private final VelocityConfiguration configuration;
 	private final ServerDataManager serverDataManager;
 	private final File dataFolder, SCRIPTS_FOLDER;
+	private final Metrics.Factory metricsFactory;
 	private VariableManager variableManager;
 	private EventManager eventManager;
 	private final ProxyServer proxy;
@@ -66,9 +69,10 @@ public class VelocitySkungee implements ProxyPlatform {
 	private JapsonServer japson;
 
 	@Inject
-	public VelocitySkungee(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
+	public VelocitySkungee(ProxyServer proxy, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
 		this.proxy = proxy;
 		this.logger = logger;
+		this.metricsFactory = metricsFactory;
 		serverDataManager = new ServerDataManager(this);
 		eventManager = new EventManager(this);
 		dataFolder = path.toFile();
@@ -116,8 +120,8 @@ public class VelocitySkungee implements ProxyPlatform {
 							return clazz.getConstructor(ProxyServer.class).newInstance(proxy);
 						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 							try {
-								return clazz.newInstance();
-							} catch (InstantiationException | IllegalAccessException e1) {
+								return clazz.getConstructor().newInstance();
+							} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
 								e.printStackTrace();
 								return null;
 							}
@@ -172,10 +176,13 @@ public class VelocitySkungee implements ProxyPlatform {
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
+		Metrics metrics = metricsFactory.make(this, 15887);
+		metrics.addCustomChart(new SimplePie("amount_of_plugins", () -> getProxy().getPluginManager().getPlugins().size() + ""));
+		metrics.addCustomChart(new SimplePie("storage_type", () -> variableManager.getMainStorage().getNames()[0]));
 	}
 
 	@Subscribe
-	public void onProxyInitialization(ProxyShutdownEvent event) {
+	public void onProxyShutdown(ProxyShutdownEvent event) {
 		japson.shutdown();
 	}
 

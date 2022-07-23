@@ -2,6 +2,7 @@ package com.skungee.spigot;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.SocketException;
 import java.util.Optional;
 import java.util.Set;
@@ -9,6 +10,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,7 +37,6 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 	private ServerDataTask task;
 	private JapsonClient japson;
 	private SkriptAddon addon;
-	private Metrics metrics;
 	private SkungeeAPI API;
 
 	@Override
@@ -68,8 +70,8 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 				receiver.registerHandlers(new Reflections("com.skungee.spigot.handlers")
 						.getSubTypesOf(Handler.class).stream().filter(clazz -> !clazz.equals(Executor.class)).map(clazz -> {
 							try {
-								return clazz.newInstance();
-							} catch (InstantiationException | IllegalAccessException e) {
+								return clazz.getConstructor().newInstance();
+							} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 								e.printStackTrace();
 								return null;
 							}
@@ -78,7 +80,8 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 				e.printStackTrace();
 			}
 		}
-		metrics = new Metrics(this);
+		Metrics metrics = new Metrics(this, 1914);
+		metrics.addCustomChart(new SimplePie("skript_version", () -> Skript.getVersion().toString()));
 		task = new ServerDataTask(this, japson);
 		Bukkit.getScheduler().runTaskTimerAsynchronously(this, task, 0, 60 * 20); // 1 minute.
 		if (Bukkit.getPluginManager().isPluginEnabled("Skript")) {
@@ -127,10 +130,6 @@ public class SpigotSkungee extends JavaPlugin implements Platform {
 	@Override
 	public File getPlatformFolder() {
 		return getDataFolder();
-	}
-
-	public Metrics getMetrics() {
-		return metrics;
 	}
 
 	@Override

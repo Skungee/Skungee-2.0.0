@@ -3,6 +3,7 @@ package com.skungee.bungeecord;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
@@ -15,6 +16,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.bstats.bungeecord.Metrics;
+import org.bstats.charts.SimplePie;
 import org.reflections.Reflections;
 
 import com.google.common.collect.Lists;
@@ -54,7 +57,6 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 	private File SCRIPTS_FOLDER;
 	private SkungeeAPI API;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -91,8 +93,8 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 			japson.registerHandlers(new Reflections("com.skungee.proxy.handlers", "com.skungee.bungeecord.handlers")
 					.getSubTypesOf(Handler.class).stream().filter(clazz -> clazz != Executor.class).map(clazz -> {
 						try {
-							return clazz.newInstance();
-						} catch (InstantiationException | IllegalAccessException e) {
+							return clazz.getConstructor().newInstance();
+						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 							e.printStackTrace();
 							return null;
 						}
@@ -147,6 +149,9 @@ public class BungeeSkungee extends Plugin implements ProxyPlatform {
 		}
 		API = new SkungeeAPI(this);
 		variableManager = new VariableManager(this);
+		Metrics metrics = new Metrics(this, 1913);
+		metrics.addCustomChart(new SimplePie("amount_of_plugins", () -> getProxy().getPluginManager().getPlugins().size() + ""));
+		metrics.addCustomChart(new SimplePie("storage_type", () -> variableManager.getMainStorage().getNames()[0]));
 		consoleMessage("Started on " + japson.getAddress().toString());
 	}
 
