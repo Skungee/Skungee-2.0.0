@@ -83,7 +83,7 @@ dependencies {
 	testImplementation (group: 'com.github.Sitrica', name: 'Japson', version: '1.1.4')
 	//shadow (group: 'com.sitrica', name: 'japson-beta', version: '1.1.4.0-SNAPSHOT')
 
-	testRuntimeOnly (group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.0')
+	testRuntimeOnly (group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.1')
 	testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.1')
 	testImplementation (group: 'org.reflections', name: 'reflections', version: '0.9.12')
 
