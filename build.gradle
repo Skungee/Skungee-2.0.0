@@ -71,7 +71,7 @@ dependencies {
 	shadow group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
 	// bStats
-	shadow group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.0'
+	shadow group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.1'
 	shadow group: 'org.bstats', name: 'bstats-velocity', version: '3.0.1'
 	shadow group: 'org.bstats', name: 'bstats-bungeecord', version: '3.0.0'
 
