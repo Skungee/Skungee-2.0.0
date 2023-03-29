@@ -73,7 +73,7 @@ dependencies {
 	// bStats
 	shadow group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2'
 	shadow group: 'org.bstats', name: 'bstats-velocity', version: '3.0.1'
-	shadow group: 'org.bstats', name: 'bstats-bungeecord', version: '3.0.1'
+	shadow group: 'org.bstats', name: 'bstats-bungeecord', version: '3.0.2'
 
 	// Reflections
 	shadow (group: 'org.reflections', name: 'reflections', version: '0.10.2')
