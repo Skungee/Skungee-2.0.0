@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-	id 'com.github.johnrengelman.shadow' version '7.1.2'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
 	id 'maven-publish'
 	id 'eclipse'
 	id 'java'
@@ -47,21 +47,21 @@ repositories {
 dependencies {
 
 	// Nullable annotation
-	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.600')
+	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.700')
 
 	// Velocity
-	implementation (group: 'com.velocitypowered', name: 'velocity-api', version: '3.1.0')
-	annotationProcessor (group: 'com.velocitypowered', name: 'velocity-api', version: '1.1.8')
+	implementation (group: 'com.velocitypowered', name: 'velocity-api', version: '3.1.1')
+	annotationProcessor (group: 'com.velocitypowered', name: 'velocity-api', version: '3.1.1')
 
 	// Spigot
-	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.19.2-R0.1-SNAPSHOT')
+	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.19.4-R0.1-SNAPSHOT')
 
 	// Bungeecord
 	implementation (group: 'net.md-5', name: 'bungeecord-protocol', version: '1.19-R0.1-SNAPSHOT')
 	implementation (group: 'net.md-5', name: 'bungeecord-api', version: '1.19-R0.1-SNAPSHOT')
 
 	// Skript
-	implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.6.3') {
+	implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.7.0-beta2') {
 		transitive = false
 	}
 
@@ -71,9 +71,9 @@ dependencies {
 	shadow group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
 	// bStats
-	shadow group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.0'
-	shadow group: 'org.bstats', name: 'bstats-velocity', version: '3.0.0'
-	shadow group: 'org.bstats', name: 'bstats-bungeecord', version: '3.0.0'
+	shadow group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2'
+	shadow group: 'org.bstats', name: 'bstats-velocity', version: '3.0.2'
+	shadow group: 'org.bstats', name: 'bstats-bungeecord', version: '3.0.2'
 
 	// Reflections
 	shadow (group: 'org.reflections', name: 'reflections', version: '0.10.2')
@@ -83,11 +83,11 @@ dependencies {
 	testImplementation (group: 'com.github.Sitrica', name: 'Japson', version: '1.1.4')
 	//shadow (group: 'com.sitrica', name: 'japson-beta', version: '1.1.4.0-SNAPSHOT')
 
-	testRuntimeOnly (group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.0')
-	testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.0')
+	testRuntimeOnly (group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.2')
+	testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.2')
 	testImplementation (group: 'org.reflections', name: 'reflections', version: '0.9.12')
 
-	shadow (group: 'org.json', name: 'json', version: '20220320')
+	shadow (group: 'org.json', name: 'json', version: '20220924')
 
 }
 

@@ -41,7 +41,7 @@ public enum Packets {
 		this.id = (byte) id;
 	}
 
-	public byte getPacketId() {
+	public int getPacketId() {
 		return id;
 	}
 
