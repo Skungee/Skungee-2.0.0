@@ -125,10 +125,9 @@ processResources {
 shadowJar {
 	configurations = [project.configurations.shadow]
 	archiveVersion = version
-	baseName = project.name
+	archiveBaseName = project.name
 	relocate 'com.sitrica.japson', 'com.skungee.japson'
 	relocate 'org.bstats', 'com.skungee.bstats'
-	classifier = ''
 	minimize()
 }
 
