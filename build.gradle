@@ -87,7 +87,7 @@ dependencies {
 	testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.3')
 	testImplementation (group: 'org.reflections', name: 'reflections', version: '0.10.2')
 
-	shadow (group: 'org.json', name: 'json', version: '20230227')
+	shadow (group: 'org.json', name: 'json', version: '20230618')
 
 }
 
